@@ -21,10 +21,7 @@ devices = []
 sizes = []
 ebs.each do |v|
   puts "Adding a volume of #{v["size"]} to be mounted at #{v["device"]}."
-#  volumeId = c.call("CreateVolume", "Size" => v["size"].to_s,  "AvailabilityZone" => avail_zone)["volumeId"]
-#  snapshotId = c.call("CreateSnapshot", "VolumeId" => volumeId)["snapshotId"]
-#  snapshots << snapshotId
-  snapshots << "snap-87fcd7ef" # an empty snapshot
+  snapshots << "snap-ab600ac2" # a public snapshot described as "empty snapshot for provisioning"
   devices << v["device"]
   sizes << v["size"].to_s
 end
