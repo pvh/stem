@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require 'swirl'
+require 'pp'
+
+c = Swirl::EC2.new
+
+pp c.call "CreateImage", "InstanceId" => ARGV[1], "Name" => ARGV[0]
+
