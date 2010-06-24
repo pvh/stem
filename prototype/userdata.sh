@@ -43,6 +43,7 @@ kuzushi-erb templates/postgresql.conf-8.4.erb > /etc/postgresql/8.4/main/postgre
 
 ONE_THIRD_OF_RAM=$(cat /proc/meminfo | awk '/MemTotal/ { printf("%d", $2 / 3 * 1024) }')
 echo "kernel.shmmax=$ONE_THIRD_OF_RAM" >> /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
 
 kuzushi-erb templates/s3cfg.erb > /etc/s3cfg
 chown postgres:postgres /etc/s3cfg
