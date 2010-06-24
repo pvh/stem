@@ -1,0 +1,6 @@
+---
+pg_admin_password: admin
+db_role: role
+db_password: password
+---
+
