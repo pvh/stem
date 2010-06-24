@@ -6,20 +6,29 @@ require 'pp'
 
 c = Swirl::EC2.new
 
-CONFIG = ARGV[0] + "/config.json"
-USERDATA = ARGV[0] + "/userdata.sh"
+CONFIG = ARGV[0]
+USERDATA = ARGV[1]
 
 config = JSON.parse File.read CONFIG
 throw "No config" unless config
 
 avail_zone = config["availability_zone"] || "us-east-1c"
 
+ami = nil
+if config["ami32"]
+  ami = config["ami32"]
+elsif config["ami-name"]
+  i = c.call "DescribeImages", "Owner" => "self"
+  ami = i["imagesSet"].select {|m| m["name"] == "pgprototype.2" }.map { |m| m["imageId"] }.first
+end
+throw "No AMI specified." unless ami
+
 opt = {
   "Placement.AvailabilityZone" => avail_zone,
   "MinCount" => "1",
   "MaxCount" => "1",
   "KeyName" => "default",
-  "ImageId" => config["ami32"]
+  "ImageId" => ami
 }
 
 if config["volumes"]

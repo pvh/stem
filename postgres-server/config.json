@@ -1,5 +1,5 @@
 {
-  "ami32": "ami-d00ce4b9",
+  "ami-name": "pg-prototype",
   "security_group" : "pg",
   "user" : "ubuntu",
   "availability_zone" : "us-east-1a",
