@@ -40,7 +40,10 @@ export WAL_DIR="/wal"
 echo "--- POSTGRESQL CONFIGURE"
 cp files/pg_hba.conf /etc/postgresql/8.4/main/
 kuzushi-erb templates/postgresql.conf-8.4.erb > /etc/postgresql/8.4/main/postgresql.conf
-kuzushi-erb templates/shmmax.erb > /proc/sys/kernel/shmmax
+
+ONE_THIRD_OF_RAM=$(cat /proc/meminfo | awk '/MemTotal/ { printf("%d", $2 / 3 * 1024) }')
+echo "kernel.shmmax=$ONE_THIRD_OF_RAM" >> /etc/sysctl.conf
+
 kuzushi-erb templates/s3cfg.erb > /etc/s3cfg
 chown postgres:postgres /etc/s3cfg
 
