@@ -6,10 +6,10 @@ require 'pp'
 
 c = Swirl::EC2.new
 
-CONFIG = ARGV[0]
-USERDATA = ARGV[1]
+CONFIG = ARGV[0] + "/config.json"
+USERDATA = ARGV[0] + "/userdata.sh"
 
-config = JSON.parse File.read ARGV[0]
+config = JSON.parse File.read CONFIG
 throw "No config" unless config
 
 avail_zone = config["availability_zone"] || "us-east-1c"
