@@ -1,0 +1,7 @@
+$ bin/stem prototype
+# wait for the prototype to finish building, ssh in and check /var/log/kuzushi.log
+$ bin/seed pgprototype <instance-id>
+# wait a bit for amazon to create the snapshots
+$ vim instance/config.json and put the instance-id for the ami in
+$ bin/stem instance
+
