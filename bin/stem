@@ -14,30 +14,32 @@ throw "No config" unless config
 
 avail_zone = config["availability_zone"] || "us-east-1c"
 
-ebs = config["volumes"].select {|v| v["media"] == "ebs"}
-
-# XXX: check that the ebs group is ok before starting to create volumes
-
-devices = []
-sizes = []
-ebs.each do |v|
-  puts "Adding a volume of #{v["size"]} to be mounted at #{v["device"]}."
-  devices << v["device"]
-  sizes << v["size"].to_s
-end
-
 opt = {
   "Placement.AvailabilityZone" => avail_zone,
   "MinCount" => "1",
   "MaxCount" => "1",
   "KeyName" => "default",
-  "ImageId" => config["ami32"],
-  "BlockDeviceMapping.#.Ebs.VolumeSize" => sizes,
-  "BlockDeviceMapping.#.DeviceName" => devices
+  "ImageId" => config["ami32"]
 }
 
+if config["volumes"]
+  ebs = config["volumes"].select {|v| v["media"] == "ebs"}
+  # XXX: check that the ebs group is ok before starting to create volumes
+
+  devices = []
+  sizes = []
+  ebs.each do |v|
+    puts "Adding a volume of #{v["size"]} to be mounted at #{v["device"]}."
+    devices << v["device"]
+    sizes << v["size"].to_s
+  end
+
+  opt.merge! "BlockDeviceMapping.#.Ebs.VolumeSize" => sizes,
+             "BlockDeviceMapping.#.DeviceName" => devices
+end
+
 if USERDATA && data = File.read(USERDATA)
-  puts "Including userdata."
+  puts "Userdata provided."
   opt.merge!({ "UserData" => Base64.encode64(data)})
 end
 
