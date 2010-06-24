@@ -1,0 +1,12 @@
+// some options need to be over-written - instance size for instance
+// some on the otherhand need to merge - such as packages or users
+// how do we know what is what? - hard code for now
+{
+  "ami32":"ami-d00ce4b9", // public ubuntu 10.04 ami - 32 bit
+  "ami64":"", // public ubuntu 10.04 ami - 64 bit (UNUSED)
+  "security_group" : "pg", // (UNUSED)
+  "user" : "ubuntu", // (UNUSED)
+
+  "availability_zone" : "us-east-1a",
+  "elastic_ip" : true // UNUSED
+}

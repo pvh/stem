@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+require 'swirl'
+c = Swirl::EC2.new
+
+images = c.call "DescribeImages", "Owner" => "self"
+puts images["imagesSet"].inject({}) { |them, img| them[ img["name"] ] = String.new(img["imageId"]); them }.to_yaml
+

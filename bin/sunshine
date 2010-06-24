@@ -4,5 +4,10 @@ require 'swirl'
 require 'pp'
 
 c = Swirl::EC2.new
-pp c.call "DescribeInstances", "InstanceId" => ARGV[0]
+r = c.call "DescribeInstances", "InstanceId" => ARGV[0]
 
+if ARGV[1]
+  puts r[ARGV[1]]
+else
+  pp r
+end
