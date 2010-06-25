@@ -12,7 +12,7 @@ amis = c.call("DescribeImages", "ImageId" => lookup.keys)["imagesSet"]
 
 amis.each do |ami|
   name = ami["name"]
-  if !ami["description"] || ami["description"][0..2] != "%%"
+  if !ami["description"] || ami["description"][0..1] != "%%"
     # only truncate ugly names from other people (never truncate ours)
     name.gsub!(/^(.{8}).+(.{8})/) { $1 + "..." + $2 }
     name = "(foreign) " + name
