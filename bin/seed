@@ -2,8 +2,11 @@
 
 require 'swirl'
 require 'pp'
+require 'json'
 
 c = Swirl::EC2.new
 
-pp c.call "CreateImage", "InstanceId" => ARGV[1], "Name" => ARGV[0], "NoReboot" => "false"
+description = {}
+
+pp c.call "CreateImage", "InstanceId" => ARGV[1], "Name" => ARGV[0], "Description" => "%%" + description.to_json
 

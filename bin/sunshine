@@ -4,10 +4,26 @@ require 'swirl'
 require 'pp'
 
 c = Swirl::EC2.new
-r = c.call "DescribeInstances", "InstanceId" => ARGV[0]
+instances = c.call("DescribeInstances")
 
-if ARGV[1]
-  puts r[ARGV[1]]
-else
-  pp r
+lookup = {}
+instances["reservationSet"].each {|r| r["instancesSet"].each { |i| lookup[i["imageId"]] = nil } }
+amis = c.call("DescribeImages", "ImageId" => lookup.keys)["imagesSet"]
+
+amis.each do |ami|
+  name = ami["name"]
+  if !ami["description"] || ami["description"][0..2] != "%%"
+    # only truncate ugly names from other people (never truncate ours)
+    name.gsub!(/^(.{8}).+(.{8})/) { $1 + "..." + $2 }
+    name = "(foreign) " + name
+  end
+  lookup[ami["imageId"]] = name
 end
+
+instances["reservationSet"].each do |r|
+  r["instancesSet"].each do |i|
+    name = lookup[i["imageId"]]
+    puts "%-15s %-15s %-15s %s" % [ i["instanceId"], i["ipAddress"] || "no ip", i["instanceState"]["name"], name ? name : i["imageId"]]
+  end
+end
+

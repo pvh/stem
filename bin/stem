@@ -19,7 +19,7 @@ if config["ami32"]
   ami = config["ami32"]
 elsif config["ami-name"]
   i = c.call "DescribeImages", "Owner" => "self"
-  ami = i["imagesSet"].select {|m| m["name"] == "pgprototype.2" }.map { |m| m["imageId"] }.first
+  ami = i["imagesSet"].select {|m| m["name"] == config["ami-name"] }.map { |m| m["imageId"] }.first
 end
 throw "No AMI specified." unless ami
 
@@ -52,6 +52,10 @@ if USERDATA && data = File.read(USERDATA)
   opt.merge!({ "UserData" => Base64.encode64(data)})
 end
 
-pp opt
-pp c.call "RunInstances", opt
+#pp opt
+response = c.call "RunInstances", opt
 
+puts "Success!"
+response["instancesSet"].each do |i|
+  puts i["instanceId"]
+end
