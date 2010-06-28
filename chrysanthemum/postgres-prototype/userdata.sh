@@ -10,6 +10,7 @@ echo "--- BEGIN"
 export DEBIAN_FRONTEND="noninteractive"
 export DEBIAN_PRIORITY="critical"
 
+# you only need this part if you're using volumes
 echo "--- KUZUSHI"
 apt-get update
 apt-get install ruby rubygems ruby-dev irb libopenssl-ruby libreadline-ruby curl -y
@@ -17,7 +18,7 @@ gem install kuzushi --no-rdoc --no-ri
 echo 'export PATH=`ruby -r rubygems -e "puts Gem.bindir"`:$PATH' >> /etc/profile ; . /etc/profile
 
 # gotta get kuzushi the config.json
-apt-get -y install git-core s3cmd
+apt-get -y install s3cmd
 
 # ugggg
 cat > config.json <<CONFIG
@@ -76,7 +77,6 @@ sysctl -p /etc/sysctl.conf
 kuzushi-erb templates/s3cfg.erb > /etc/s3cfg
 chown postgres:postgres /etc/s3cfg
 
-echo "--- POSTGRESQL CONFIGURE INIT CLUSTER"
 mkdir -p $DATA_DIR
 mkdir -p $WAL_DIR
 chown postgres:postgres $DATA_DIR $WAL_DIR
