@@ -1,0 +1,7 @@
+outstanding issues here
+--------------------------
+
+config.json is repeated in the userdata script
+most of kuzushi is now obsolete
+kuzushi doesn't actually build things in a way that survives a reboot
+
