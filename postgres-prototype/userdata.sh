@@ -18,8 +18,37 @@ echo 'export PATH=`ruby -r rubygems -e "puts Gem.bindir"`:$PATH' >> /etc/profile
 
 # gotta get kuzushi the config.json
 apt-get -y install git-core s3cmd
-git clone https://pvh:temp@github.com/heroku/bifrost-judo.git
-cd bifrost-judo/dedicated
+
+# ugggg
+cat > config.json <<CONFIG
+{
+  "ami32":"ami-714ba518", // public ubuntu 10.04 ami - 32 bit
+  "availability_zone" : "us-east-1a",
+
+  "volumes" : [
+    { "device" : "/dev/sde1", "media" : "ebs", "size" : 64, "format" : "ext3", "scheduler" : "deadline", "label" : "/wal", "mount": "/wal", "mount_options" : "nodev,nosuid,noatime" },
+    { "device" : "/dev/sdf1", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
+    { "device" : "/dev/sdf2", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
+    { "device" : "/dev/sdf3", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
+    { "device" : "/dev/sdf4", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
+    { "device" : "/dev/sdf5", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
+    { "device" : "/dev/sdf6", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
+    { "device" : "/dev/sdf7", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
+    { "device" : "/dev/sdf8", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
+    { "device" : "/dev/md0",
+      "media" : "raid",
+      "label" : "/database",
+      "mount" : "/database",
+      "drives" : [ "/dev/sdf1", "/dev/sdf2", "/dev/sdf3", "/dev/sdf4", "/dev/sdf5", "/dev/sdf6", "/dev/sdf7", "/dev/sdf8" ],
+      "level" : 0,
+      "chunksize" : 256,
+      "readahead" : 65536,
+      "format" : "xfs"  // implies xfsprogs package
+    }
+   ]
+}
+CONFIG
+
 export JUDO_FIRST_BOOT=true
 kuzushi-setup
 
