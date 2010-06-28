@@ -1,0 +1,4 @@
+restore_command = '<%= ENV["PG_RESTORE_COMMAND"] %>'
+<% if !(t = ENV["PG_RECOVER_AT"]).empty? %>
+recovery_target_time = '<%= t %>'
+<% end %>
