@@ -3,7 +3,6 @@
 set -e
 set -x
 
-
 function userdata() {
         exec 2>&1
 
@@ -62,7 +61,8 @@ ln -s /etc/ssl/private/ssl-cert-snakeoil.key $DATA_DIR/server.key
 echo "--- POSTGRESQL START"
 service postgresql-8.4 start
 
-echo "--- END"
+echo "--- END, SHUTTING DOWN"
+shutdown -h now
 
 }
 

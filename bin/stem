@@ -1,18 +1,13 @@
 #!/usr/bin/env ruby
-
 $:.unshift File.dirname(__FILE__) + "/../lib"
-require 'greenfield'
+require 'stem'
 
-c = Swirl::EC2.new
+# Help is the default.
+ARGV << '-h' if ARGV.empty? && $stdin.tty?
 
-CONFIG = ARGV[0]
-USERDATA = ARGV[1]
+# Process options
+Stem::CLI.parse_options(ARGV) if $stdin.tty?
 
-config = JSON.parse File.read CONFIG
-throw "No config" unless config
+# Still here - run the command
+Stem::CLI.dispatch_command(ARGV.shift, ARGV)
 
-userdata = File.read(USERDATA) if USERDATA
-
-instanceId = GreenField.create(config, userdata)
-
-puts instanceId

@@ -1,9 +1,9 @@
 require 'sinatra'
 require 'json'
-require 'lib/greenfield'
+require 'lib/stem'
 require 'mustache'
 
-module GreenField
+module Stem
   class HerokuApi < Sinatra::Base
     post "/resources" do
       params       = JSON.parse(request.body.string)
@@ -21,22 +21,22 @@ module GreenField
       userdata = Mustache.render(template, data)
 
       puts "Allocating an IP"
-      ip = GreenField.allocate_ip
-      instance = GreenField.create(config, userdata)
+      ip = Stem.allocate_ip
+      instance = Stem.create(config, userdata)
 
       require 'pp'
-      pp GreenField.inspect(instance)
+      pp Stem.inspect(instance)
 
       while true
-        i = GreenField.inspect(instance)
+        i = Stem.inspect(instance)
         break if i["instanceState"]["name"] == "running"
         sleep 1
         puts "Waiting... #{ i["instanceState"]["name"] }"
       end
 
-      GreenField.associate_ip(ip, instance)
+      Stem.associate_ip(ip, instance)
 
-      {:id => id, :config => {"GREENFIELD_URL" =>
+      {:id => id, :config => {"STEM_URL" =>
         "postgres://#{data["db_role"]}:#{data["db_password"]}#{ip}/#{data["db_role"]}"}}.to_json
     end
 

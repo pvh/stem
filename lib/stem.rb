@@ -1,14 +1,15 @@
 require 'swirl'
 require 'json'
+require 'stem/cli'
 
-module GreenField
+module Stem
   extend self
 
   def swirl
     @swirl ||= Swirl::EC2.new
   end
 
-  def create config, userdata = nil
+  def launch config, userdata = nil
     avail_zone = config["availability_zone"] || "us-east-1c"
 
     ami = nil
@@ -71,7 +72,29 @@ module GreenField
     result == true
   end
 
-  def inspect instance
-    swirl.call("DescribeInstances", "InstanceId" => instance)["reservationSet"][0]["instancesSet"][0]
+  def list
+    instances = swirl.call("DescribeInstances")
+
+    lookup = {}
+    instances["reservationSet"].each {|r| r["instancesSet"].each { |i| lookup[i["imageId"]] = nil } }
+    amis = swirl.call("DescribeImages", "ImageId" => lookup.keys)["imagesSet"]
+
+    amis.each do |ami|
+      name = ami["name"]
+      if !ami["description"] || ami["description"][0..1] != "%%"
+        # only truncate ugly names from other people (never truncate ours)
+        name.gsub!(/^(.{8}).+(.{8})/) { $1 + "..." + $2 }
+        name = "(foreign) " + name
+      end
+      lookup[ami["imageId"]] = name
+    end
+
+    instances["reservationSet"].each do |r|
+      r["instancesSet"].each do |i|
+        name = lookup[i["imageId"]]
+        puts "%-15s %-15s %-15s %s" % [ i["instanceId"], i["ipAddress"] || "no ip", i["instanceState"]["name"], name ? name : i["imageId"]]
+      end
+    end
   end
+
 end

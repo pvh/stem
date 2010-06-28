@@ -1,5 +1,5 @@
 require 'web'
 
 map "/heroku" do
-  run GreenField::HerokuApi
+  run Stem::HerokuApi
 end
