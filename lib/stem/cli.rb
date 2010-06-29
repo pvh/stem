@@ -1,3 +1,5 @@
+require 'optparse'
+
 module Stem
   module CLI
     extend self
