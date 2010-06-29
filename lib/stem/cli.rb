@@ -55,14 +55,14 @@ module Stem
     end
 
     def launch config_file = nil, userdata_file = nil
-      throw "No config file" unless config_file
+      abort "No config file" unless config_file
       userdata = File.new(userdata_file).read() if userdata_file
       instance = Stem::launch(JSON.parse(File.new(config_file).read()), userdata)
       puts "New instance ID: #{instance}"
     end
 
     def capture name = nil, instance = nil
-      throw "Usage: capture ami-name instance-to-capture" unless name && instance
+      abort "Usage: capture ami-name instance-to-capture" unless name && instance
       Stem::capture(name, instance)
     end
 
