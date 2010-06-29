@@ -1,4 +1,4 @@
 {
-  "ami-name": "postgres-8.4-prototype"
+  "ami-name": "postgres-server"
 }
 
