@@ -14,14 +14,12 @@ module Stem
         opts.separator " "
 
         opts.separator "Examples:"
-        opts.separator "  $ stem boot prototype.config prototype.sh"
+        opts.separator "  $ stem launch prototype.config prototype.sh"
         opts.separator "  $ stem list"
-        opts.separator "  $ stem image instance-id class-name"
+        opts.separator "  $ stem capture name instance-id"
 
         opts.separator " "
         opts.separator "Options:"
-
-        opts.separator "Common Options:"
 
         opts.on("-v", "--version", "Print the version") do |v|
           puts "Stem v#{Stem::Version}"
