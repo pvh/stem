@@ -11,7 +11,7 @@
     { "device" : "/dev/sdf5", "size" : 128 },
     { "device" : "/dev/sdf6", "size" : 128 },
     { "device" : "/dev/sdf7", "size" : 128 },
-    { "device" : "/dev/sdf8", "size" : 128 },
+    { "device" : "/dev/sdf8", "size" : 128 }
    ]
 }
 
