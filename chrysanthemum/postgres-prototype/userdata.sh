@@ -28,14 +28,6 @@ cat > config.json <<CONFIG
 
   "volumes" : [
     { "device" : "/dev/sde1", "media" : "ebs", "size" : 64, "format" : "ext3", "scheduler" : "deadline", "label" : "/wal", "mount": "/wal", "mount_options" : "nodev,nosuid,noatime" },
-    { "device" : "/dev/sdf1", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
-    { "device" : "/dev/sdf2", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
-    { "device" : "/dev/sdf3", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
-    { "device" : "/dev/sdf4", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
-    { "device" : "/dev/sdf5", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
-    { "device" : "/dev/sdf6", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
-    { "device" : "/dev/sdf7", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
-    { "device" : "/dev/sdf8", "media" : "ebs", "size" : 128, "scheduler" : "deadline" },
     { "device" : "/dev/md0",
       "media" : "raid",
       "label" : "/database",
@@ -53,6 +45,7 @@ CONFIG
 export JUDO_FIRST_BOOT=true
 kuzushi-setup
 
+echo "--- CONFIGURE DRIVES"
 service udev stop
 mdadm --create /dev/md0 -n 8 -l 0 -c 256 /dev/sdf{1..8}
 service udev start
@@ -62,6 +55,13 @@ blockdev --setra 65535 /dev/md0
 mdadm -Es >>/etc/mdadm/mdadm.conf
 echo "/dev/md0          /database   xfs" >> /etc/fstab
 echo "/dev/sde1         /wal        ext3   nodev,nosuid,noatime" >> /etc/fstab
+
+# this should be done every boot
+for i in /sys/block/sdf{1..8}/queue/scheduler; do
+  echo "deadline" > $i
+done
+
+
 
 echo "--- POSTGRESQL INSTALL"
 apt-get -y install thin postgresql-8.4 postgresql-server-dev-8.4 libpq-dev libgeos-dev proj
