@@ -38,7 +38,7 @@
 # The default values of these variables are driven from the -D command-line
 # option or PGDATA environment variable, represented here as ConfigDir.
 
-data_directory = '{{{ DATA_DIR }}}'		# use data in another directory
+data_directory = '${DATA_DIR}'		# use data in another directory
 					# (change requires restart)
 hba_file = '/etc/postgresql/8.4/main/pg_hba.conf'	# host-based authentication file
 					# (change requires restart)
@@ -103,7 +103,7 @@ ssl = true				# (change requires restart)
 
 # - Memory -
 
-shared_buffers = <%= "#{@ram_mb/4}MB" %>	# min 128kB
+shared_buffers = ${PG_SHARED_BUFFERS}  # min 128kB
 					# (change requires restart)
 #temp_buffers = 8MB			# min 800kB
 max_prepared_transactions = 500		# zero disables the feature
@@ -174,7 +174,7 @@ checkpoint_completion_target = 0.7	# checkpoint target duration, 0.0 - 1.0
 
 full_page_writes = off
 archive_mode = on
-archive_command = '<%= ENV["PG_ARCHIVE_COMMAND"] %>'
+archive_command = '${PG_ARCHIVE_COMMAND}'
 
 archive_timeout = 1min		# force a logfile segment switch after this
 				# number of seconds; 0 disables
@@ -203,7 +203,7 @@ archive_timeout = 1min		# force a logfile segment switch after this
 cpu_tuple_cost = 0.0030 	# same scale as above
 cpu_index_tuple_cost = 0.001	# same scale as above
 cpu_operator_cost = 0.0005	# same scale as above
-effective_cache_size = <%= "#{@ram_mb * 9 / 10}MB" %>
+effective_cache_size = ${PG_EFFECTIVE_CACHE_SIZE}
 
 # - Genetic Query Optimizer -
 

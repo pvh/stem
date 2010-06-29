@@ -33,12 +33,9 @@ module Stem
     }
 
     if config["volumes"]
-      ebs = config["volumes"].select {|v| v["media"] == "ebs"}
-      # XXX: check that the ebs group is ok before starting to create volumes
-
       devices = []
       sizes = []
-      ebs.each do |v|
+      config["volumes"].each do |v|
         puts "Adding a volume of #{v["size"]} to be mounted at #{v["device"]}."
         devices << v["device"]
         sizes << v["size"].to_s
@@ -49,7 +46,7 @@ module Stem
     end
 
     if userdata
-      puts "Userdata provided."
+      puts "Userdata provided, encoded and sent to the instance."
       opt.merge!({ "UserData" => Base64.encode64(userdata)})
     end
 

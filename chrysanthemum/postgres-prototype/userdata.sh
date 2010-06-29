@@ -3,6 +3,14 @@
 set -e
 set -x
 
+# template()
+#
+# replace ${VARIABLE} with its environment variable values where available
+#
+function template() {
+  perl -p -e 's/\$\{([^}]+)\}/defined $ENV{$1} ? $ENV{$1} : $&/eg' $1
+}
+
 function userdata() {
         exec 2>&1
 
@@ -18,7 +26,6 @@ echo deadline > /sys/block/sde1/queue/scheduler
 mkfs.ext3 -q -L /wal /dev/sde1
 mkdir -p /wal && mount -o noatime -t ext3 /dev/sde1 /wal
 echo "/dev/sde1         /wal        ext3   nodev,nosuid,noatime" >> /etc/fstab
-
 
 echo "   --- CREATE RAID" 
 for i in /sys/block/sdf{1..8}/queue/scheduler; do
@@ -42,16 +49,23 @@ service postgresql-8.4 stop
 echo "--- POSTGRESQL VARS"
 export DATA_DIR="/database"
 export WAL_DIR="/wal"
+SYSTEM_MEMORY=$(cat /proc/meminfo | awk '/MemTotal/ { print $2 }')
+export PG_EFFECTIVE_CACHE_SIZE=$(($SYSTEM_MEMORY * 9 / 10 / 1024))MB
+export PG_SHARED_BUFFERS=$(($SYSTEM_MEMORY / 4 / 1024))MB
+#export PG_ARCHIVE_COMMAND=XXX TODO
 
 echo "--- POSTGRESQL CONFIGURE"
-cp files/pg_hba.conf /etc/postgresql/8.4/main/
-kuzushi-erb templates/postgresql.conf-8.4.erb > /etc/postgresql/8.4/main/postgresql.conf
+wget https://stem.s3.amazonaws.com/packet.tar.gz
+tar xzpvf packet.tar.gz
 
-ONE_THIRD_OF_RAM=$(cat /proc/meminfo | awk '/MemTotal/ { printf("%d", $2 / 3 * 1024) }')
-echo "kernel.shmmax=$ONE_THIRD_OF_RAM" >> /etc/sysctl.conf
+cp packet/pg_hba.conf /etc/postgresql/8.4/main/
+template packet/postgresql.conf-8.4.template > /etc/postgresql/8.4/main/postgresql.conf
+
+# shmmax -> one third of system RAM in bytes
+echo "kernel.shmmax=$((SYSTEM_MEMORY * 1024 / 3))" >> /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 
-kuzushi-erb templates/s3cfg.erb > /etc/s3cfg
+template packet/s3cfg.template > /etc/s3cfg
 chown postgres:postgres /etc/s3cfg
 
 mkdir -p $DATA_DIR
@@ -68,7 +82,7 @@ echo "--- POSTGRESQL START"
 service postgresql-8.4 start
 
 echo "--- END, SHUTTING DOWN"
-shutdown -h now
+#shutdown -h now
 
 }
 
