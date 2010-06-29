@@ -53,6 +53,11 @@ CONFIG
 export JUDO_FIRST_BOOT=true
 kuzushi-setup
 
+service udev stop
+mdadm --create /dev/md0 -n 8 -l 0 -c 256 /dev/sdf{1..8}
+service udev start
+blockdev --setra 65535 /dev/md0
+
 # this should be part of kuzushi
 mdadm -Es >>/etc/mdadm/mdadm.conf
 echo "/dev/md0          /database   xfs" >> /etc/fstab
