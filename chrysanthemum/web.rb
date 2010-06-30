@@ -24,9 +24,6 @@ module Stem
       ip = Stem.allocate_ip
       instance = Stem.create(config, userdata)
 
-      require 'pp'
-      pp Stem.inspect(instance)
-
       while true
         i = Stem.inspect(instance)
         break if i["instanceState"]["name"] == "running"

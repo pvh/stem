@@ -97,4 +97,8 @@ module Stem
     end
   end
 
+  def restart instance_id
+    swirl.call "RebootInstances", "InstanceId" => instance_id
+  end
+
 end
