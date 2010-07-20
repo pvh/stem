@@ -16,8 +16,8 @@ module Stem
     avail_zone = config["availability_zone"] || "us-east-1c"
 
     ami = nil
-    if config["ami32"]
-      ami = config["ami32"]
+    if config["ami"]
+      ami = config["ami"]
     elsif config["ami-name"]
       i = swirl.call "DescribeImages", "Owner" => "self"
       ami = i["imagesSet"].select {|m| m["name"] == config["ami-name"] }.map { |m| m["imageId"] }.first
