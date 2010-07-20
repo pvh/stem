@@ -12,9 +12,7 @@ Gem::Specification.new do |s|
   s.authors = ["Peter van Hardenberg"]
 
   # = MANIFEST =
-  s.files = %w[LICENSE README.md] +
-    Dir["lib/**/*.rb"] +
-    ["bin/swirl"]
+  s.files = %w[LICENSE README.md] + Dir["lib/**/*.rb"]
 
   s.executables = ["stem"]
 
