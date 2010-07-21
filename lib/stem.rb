@@ -18,8 +18,8 @@ module Stem
     avail_zone = config["availability_zone"] || "us-east-1c"
 
     ami = nil
-    if config["ami32"]
-      ami = config["ami32"]
+    if config["ami"]
+      ami = config["ami"]
     elsif config["ami-name"]
       ami = image_named(config["ami-name"])
     end
