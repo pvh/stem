@@ -1,3 +1,5 @@
+$:.unshift File.dirname(__FILE__)
+
 require 'swirl'
 require 'json'
 require 'stem/cli'
@@ -19,18 +21,20 @@ module Stem
     if config["ami32"]
       ami = config["ami32"]
     elsif config["ami-name"]
-      i = swirl.call "DescribeImages", "Owner" => "self"
-      ami = i["imagesSet"].select {|m| m["name"] == config["ami-name"] }.map { |m| m["imageId"] }.first
+      ami = image_named(config["ami-name"])
     end
     throw "No AMI specified." unless ami
 
     opt = {
-      "Placement.AvailabilityZone" => avail_zone,
       "MinCount" => "1",
       "MaxCount" => "1",
-      "KeyName" => "default",
+      "KeyName" => config["key_name"] || "default",
+      "InstanceType" => config["instance_type"] || "m1.small",
       "ImageId" => ami
     }
+    if config["availability_zone"]
+      opt.merge! "Placement.AvailabilityZone" => config["availability_zone"]
+    end
 
     if config["volumes"]
       devices = []
@@ -60,18 +64,41 @@ module Stem
 
   def capture name, instance
     description = {} # more to come here...
-    swirl.call "CreateImage", "InstanceId" => instance, "Name" => name, "Description" => "%%" + description.to_json
+    swirl.call("CreateImage", "InstanceId" => instance, "Name" => name, "Description" => "%%" + description.to_json)["imageId"]
+  end
+
+  def image_named name
+      i = swirl.call "DescribeImages", "Owner" => "self"
+      ami = i["imagesSet"].select {|m| m["name"] == name }.map { |m| m["imageId"] }.first
+  end
+
+  def describe_image image
+    swirl.call("DescribeImages", "ImageId" => image)["imagesSet"][0]
+  end
+
+  def deregister_image image
+    swirl.call("DeregisterImage", "ImageId" => image)["return"]
   end
 
   def allocate_ip
     swirl.call("AllocateAddress")["publicIp"]
   end
 
-  def associate_ip ip, instance
+  def associate_ip instance, ip
     result = swirl.call("AssociateAddress", "InstanceId" => instance, "PublicIp" => ip)["return"]
-    result == true
+    result == "true"
   end
 
+  # TODO: check this
+  def release_ip ip
+    result = swirl.call("ReleaseAddress", "PublicIp" => ip)
+  end
+
+  def describe instance
+    swirl.call("DescribeInstances", "InstanceId" => instance)["reservationSet"][0]["instancesSet"][0]
+  end
+
+  # this is a piece of crap
   def list
     instances = swirl.call("DescribeInstances")
 
@@ -80,7 +107,7 @@ module Stem
     amis = swirl.call("DescribeImages", "ImageId" => lookup.keys)["imagesSet"]
 
     amis.each do |ami|
-      name = ami["name"]
+      name = ami["name"] || ami["imageId"]
       if !ami["description"] || ami["description"][0..1] != "%%"
         # only truncate ugly names from other people (never truncate ours)
         name.gsub!(/^(.{8}).+(.{8})/) { $1 + "..." + $2 }
@@ -99,6 +126,10 @@ module Stem
 
   def restart instance_id
     swirl.call "RebootInstances", "InstanceId" => instance_id
+  end
+
+  def destroy instance_id
+    swirl.call "TerminateInstances", "InstanceId" => instance_id
   end
 
 end

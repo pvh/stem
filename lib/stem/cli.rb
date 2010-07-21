@@ -45,6 +45,10 @@ module Stem
           capture(*arguments)
         when "list"
           list(*arguments)
+        when "describe"
+          describe(*arguments)
+        when "destroy"
+          destroy(*arguments)
         when nil
           puts "Please provide a command."
         else
@@ -61,7 +65,22 @@ module Stem
 
     def capture name = nil, instance = nil
       abort "Usage: capture ami-name instance-to-capture" unless name && instance
-      Stem::capture(name, instance)
+      image_id = Stem::capture(name, instance)
+      puts "New image ID: #{image_id}"
+    end
+
+    def describe what
+      require 'pp'
+      if (what[0..2] == "ami")
+        pp Stem::describe_image(what)
+      elsif
+        pp Stem::describe(what)
+      end
+    end
+
+    def destroy instance = nil
+      abort "Usage: destroy instance-id" unless instance
+      Stem::destroy(instance)
     end
 
     def list *arguments
