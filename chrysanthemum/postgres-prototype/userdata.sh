@@ -8,6 +8,7 @@ set -x
 # stone-stupid templating with only perl
 # replaces ${VARIABLE} with an environment variable value where available
 #
+
 function template() {
   perl -p -e 's/\$\{([^}]+)\}/defined $ENV{$1} ? $ENV{$1} : $&/eg' $1
 }
@@ -64,12 +65,25 @@ export PG_SHARED_BUFFERS=$(($SYSTEM_MEMORY_KB / 4 / 1024))MB
 echo "--- POSTGRESQL CONFIGURE"
 
 echo "--- templating and placing config files."
-# TODO: maybe there ought to be a more built in way to get data to here
-wget https://stem.s3.amazonaws.com/packet.tar.gz
-tar xzpvf packet.tar.gz
 
-cp packet/pg_hba.conf /etc/postgresql/8.4/main/
-template packet/postgresql.conf-8.4.template > /etc/postgresql/8.4/main/postgresql.conf
+# TODO maybe don't move this directory, but refer to the files directly
+mv dedicated/prototype/packet ~
+cd ~
+
+# setup firewall
+cp packet/iptables.rules /etc/iptables.rules
+chmod 600 /etc/iptables.rules
+echo '/sbin/iptables-restore /etc/iptables.rules' > /etc/rc.local
+useradd -m ingress
+mkdir ~ingress/.ssh
+cp packet/ingress.authorized ~ingress/.ssh/authorized_keys
+chown -R ingress:ingress ~ingress/.ssh
+chmod 700 ~ingress/.ssh
+chmod 600 ~ingress/.ssh/authorized_keys
+echo "ingress  ALL=(ALL) NOPASSWD:/sbin/iptables -[AD] local --src [0-9.]* -p tcp --dport postgresql -m comment --comment [a-z0-9]* -j ACCEPT" >> /etc/sudoers
+
+cp packet/pg_hba.conf /etc/postgresql/9.0/main/
+template packet/postgresql.conf-9.0.template > /etc/postgresql/9.0/main/postgresql.conf
 
 # shmmax -> one third of system RAM in bytes
 echo "kernel.shmmax=$((SYSTEM_MEMORY_KB * 1024 / 3))" >> /etc/sysctl.conf
