@@ -15,7 +15,7 @@ module Stem
   end
 
   def launch config, userdata = nil
-    avail_zone = config["availability_zone"] || "us-east-1c"
+    avail_zone = config["availability_zone"]
 
     ami = nil
     if config["ami"]
