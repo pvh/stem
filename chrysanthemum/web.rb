@@ -38,8 +38,8 @@ module Stem
     end
 
     delete "/resources/:name" do |name|
-      @server = @bifrost.server(name)
-      @bifrost.destroy_server_async(name)
+      @server = @sample.server(name)
+      @sample.destroy_server_async(name)
       "ok"
     end
 
