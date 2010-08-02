@@ -15,7 +15,7 @@ module Stem
   end
 
   def launch config, userdata = nil
-    avail_zone = config["availability_zone"]
+    throw "No config provided" unless config
 
     ami = nil
     if config["ami"]
