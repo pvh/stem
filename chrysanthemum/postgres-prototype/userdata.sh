@@ -33,16 +33,22 @@ service udev stop
 mdadm --create /dev/md0 -n 8 -l 0 -c 256 /dev/sdf{1..8}
 mdadm -Es >>/etc/mdadm/mdadm.conf
 service udev start
-blockdev --setra 65535 /dev/md0
-mkfs.xfs -q -L /database /dev/md0
-mkdir -p /database && mount -o noatime -t xfs /dev/md0 /database
-echo "/dev/md0          /database   xfs" >> /etc/fstab
-
+echo "blockdev --setra 256 /dev/md0" >> /etc/rc.local
+modprobe dm-mod
+echo dm-mod >> /etc/modules
+pvcreate /dev/md0
+vgcreate vgdb /dev/md0
+lvcreate -n lvdb vgdb -l `/sbin/vgdisplay vgdb | grep Free | awk '{print $5}'`
+mkfs.xfs -q -L /database /dev/vgdb/lvdb
+echo "/dev/vgdb/lvdb       /database   xfs   noatime,nosuid,nodev" >> /etc/fstab
+mkdir -p /database && mount /database
 }
 
 
 function userdata() {
 exec 2>&1
+
+echo "" > /etc/rc.local  ## truncate this file - default is 'exit 0' which breaks append ops
 
 echo "--- BEGIN"
 export DEBIAN_FRONTEND="noninteractive"
@@ -73,7 +79,8 @@ cd ~
 # setup firewall
 cp packet/iptables.rules /etc/iptables.rules
 chmod 600 /etc/iptables.rules
-echo '/sbin/iptables-restore /etc/iptables.rules' > /etc/rc.local
+echo '/sbin/iptables-restore /etc/iptables.rules' >> /etc/rc.local
+/sbin/iptables-restore /etc/iptables.rules
 useradd -m ingress
 mkdir ~ingress/.ssh
 cp packet/ingress.authorized ~ingress/.ssh/authorized_keys
