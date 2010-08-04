@@ -9,7 +9,7 @@ module Stem
       if config["ami"]
         ami = config["ami"]
       elsif config["ami-name"]
-        ami = image_named(config["ami-name"])
+        ami = Image::named(config["ami-name"])
         throw "AMI named #{config["ami-name"]} was not found. (Does it need creating?)" unless ami
       end
       throw "No AMI specified." unless ami
