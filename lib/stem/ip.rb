@@ -1,5 +1,7 @@
 module Stem
   module Ip
+    include Util
+
     extend self
     def allocate
       swirl.call("AllocateAddress")["publicIp"]

@@ -1,5 +1,6 @@
 module Stem
   module Instance
+    include Util
     extend self
 
     def launch config, userdata = nil

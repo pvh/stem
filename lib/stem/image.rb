@@ -1,5 +1,6 @@
 module Stem
   module Image
+    include Util
     extend self
 
     def snapshot name, instance
