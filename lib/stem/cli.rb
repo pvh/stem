@@ -59,32 +59,32 @@ module Stem
     def launch config_file = nil, userdata_file = nil
       abort "No config file" unless config_file
       userdata = File.new(userdata_file).read() if userdata_file
-      instance = Stem::launch(JSON.parse(File.new(config_file).read()), userdata)
+      instance = Stem::Instance::launch(JSON.parse(File.new(config_file).read()), userdata)
       puts "New instance ID: #{instance}"
     end
 
     def capture name = nil, instance = nil
       abort "Usage: capture ami-name instance-to-capture" unless name && instance
-      image_id = Stem::capture(name, instance)
+      image_id = Stem::Image::capture(name, instance)
       puts "New image ID: #{image_id}"
     end
 
     def describe what
       require 'pp'
       if (what[0..2] == "ami")
-        pp Stem::describe_image(what)
+        pp Stem::Image::describe(what)
       elsif
-        pp Stem::describe(what)
+        pp Stem::Instance::describe(what)
       end
     end
 
     def destroy instance = nil
       abort "Usage: destroy instance-id" unless instance
-      Stem::destroy(instance)
+      Stem::Instance::destroy(instance)
     end
 
     def list *arguments
-      Stem::list(*arguments)
+      Stem::Instance::list(*arguments)
     end
   end
 end
