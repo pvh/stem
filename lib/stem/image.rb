@@ -3,12 +3,12 @@ module Stem
     include Util
     extend self
 
-    def snapshot name, instance
+    def create name, instance
       description = {}
       swirl.call("CreateImage", "InstanceId" => instance, "Name" => name, "Description" => "%%" + description.to_json)["imageId"]
     end
 
-    def release image
+    def deregister image
       swirl.call("DeregisterImage", "ImageId" => image)["return"]
     end
 

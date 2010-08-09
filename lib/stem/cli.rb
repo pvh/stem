@@ -16,7 +16,7 @@ module Stem
         opts.separator "Examples:"
         opts.separator "  $ stem launch prototype.config prototype.sh"
         opts.separator "  $ stem list"
-        opts.separator "  $ stem capture name instance-id"
+        opts.separator "  $ stem create name instance-id"
 
         opts.separator " "
         opts.separator "Options:"
@@ -41,8 +41,8 @@ module Stem
       case command
         when "launch"
           launch(*arguments)
-        when "capture"
-          capture(*arguments)
+        when "create"
+          create(*arguments)
         when "list"
           list(*arguments)
         when "describe"
@@ -63,9 +63,9 @@ module Stem
       puts "New instance ID: #{instance}"
     end
 
-    def capture name = nil, instance = nil
-      abort "Usage: capture ami-name instance-to-capture" unless name && instance
-      image_id = Stem::Image::capture(name, instance)
+    def create name = nil, instance = nil
+      abort "Usage: create ami-name instance-to-capture" unless name && instance
+      image_id = Stem::Image::create(name, instance)
       puts "New image ID: #{image_id}"
     end
 
