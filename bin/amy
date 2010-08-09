@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 require 'swirl'
-c = Swirl::EC2.new
+c = Swirl::EC2.new(
+          :aws_access_key_id => ENV['AWS_ACCESS_KEY_ID'],
+          :aws_secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
+)
 
 images = c.call "DescribeImages", "Owner" => "self"
 puts images["imagesSet"].inject({}) { |them, img| them[ img["name"] ] = String.new(img["imageId"]); them }.to_yaml
