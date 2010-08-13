@@ -1,10 +1,11 @@
 require 'optparse'
 
 module Stem
+  Version = 0.2
+
   module CLI
     extend self
 
-    Version = 0.1
 
     # Return a structure describing the options.
     def parse_options(args)
