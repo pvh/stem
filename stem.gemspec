@@ -7,9 +7,10 @@ Gem::Specification.new do |s|
   s.date = '2010-08-12'
 
   s.description = "minimalist EC2 instance management"
-  s.summary     = s.description
+  s.summary     = "an EC2 instance management library designed to get out of your way and give you instances"
 
   s.authors = ["Peter van Hardenberg"]
+  s.email = ["pvh@heroku.com"]
 
   # = MANIFEST =
   s.files = %w[LICENSE README.md] + Dir["lib/**/*.rb"]
