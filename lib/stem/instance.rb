@@ -95,7 +95,7 @@ module Stem
       instances["reservationSet"].each do |r|
         r["instancesSet"].each do |i|
             name = lookup[i["imageId"]]
-            puts "%-15s %-15s %-15s %s" % [ i["instanceId"], i["ipAddress"] || "no ip", i["instanceState"]["name"], name
+            puts "%-15s %-15s %-15s %s" % [ i["instanceId"], i["ipAddress"] || "no ip", i["instanceState"]["name"], name ]
         end
       end
 

@@ -1,7 +1,7 @@
 require 'optparse'
 
 module Stem
-  Version = 0.2
+  Version = "0.2.1"
 
   module CLI
     extend self
