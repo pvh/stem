@@ -69,7 +69,43 @@ module Stem
     end
 
     def list
+      instances = swirl.call("DescribeInstances")
 
+      lookup = {}
+      instances["reservationSet"].each do |r|
+        r["instancesSet"].each do |i|
+          lookup[i["imageId"]] = nil
+        end
+      end
+      amis = swirl.call("DescribeImages", "ImageId" => lookup.keys)["imagesSet"]
+
+      amis.each do |ami|
+        name = ami["name"] || ami["imageId"]
+        if !ami["description"] || ami["description"][0..1] != "%%"
+          # only truncate ugly names from other people (never truncate ours)
+          name.gsub!(/^(.{8}).+(.{8})/) { $1 + "..." + $2 }
+          name = "(foreign) " + name
+        end
+        lookup[ami["imageId"]] = name
+      end
+
+      puts "------------------------------------------"
+      puts "Instances"
+      puts "------------------------------------------"
+      instances["reservationSet"].each do |r|
+        r["instancesSet"].each do |i|
+            name = lookup[i["imageId"]]
+            puts "%-15s %-15s %-15s %s" % [ i["instanceId"], i["ipAddress"] || "no ip", i["instanceState"]["name"], name
+        end
+      end
+
+      puts "------------------------------------------"
+      puts "AMIs"
+      puts "------------------------------------------"
+      images = c.call "DescribeImages", "Owner" => "self"
+      images["imagesSet"].each do
+        puts "%-15s %s" % [ img["name"], img["imageId"] ]
+      end
     end
   end
 end

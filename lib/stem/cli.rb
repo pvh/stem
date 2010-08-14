@@ -6,7 +6,6 @@ module Stem
   module CLI
     extend self
 
-
     # Return a structure describing the options.
     def parse_options(args)
       opts = OptionParser.new do |opts|
@@ -15,9 +14,9 @@ module Stem
         opts.separator " "
 
         opts.separator "Examples:"
-        opts.separator "  $ stem launch prototype.config prototype.sh"
+        opts.separator "  $ stem launch prototype.config prototype-userdata.sh"
         opts.separator "  $ stem list"
-        opts.separator "  $ stem create name instance-id"
+        opts.separator "  $ stem create ami-name instance-id"
 
         opts.separator " "
         opts.separator "Options:"
