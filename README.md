@@ -13,7 +13,7 @@ You can use Stem to manage your instances either from the commandline or directl
 
 Here's a simple example from the command line. Begin by launching the example prototype instance.
 
-    $ bin/stem launch chrysanthemum/prototype/config.json chrysanthemum/prototype/userdata.sh
+    $ bin/stem launch chrysanthemum/postgres-prototype/config.json chrysanthemum/postgres-prototype/userdata.sh
 
 The config.json file specifies which AMI to start from, and what kind of EBS drive configuration to use. It is important that the drives are specified in the configuration file as any drives attached to the instance after launch will not become part of the eventual AMI you are creating 
 
@@ -33,8 +33,8 @@ If the AMI fabrication reaches the state "failed" you will have to manually reis
 
 Now that you have a simple postgres-server, you'll want to boot it up and create a database on it with some unique credentials! One of the simplest ways to solve this problem is to provide the instance with a templated userdata script which will perform per-instance configuration. I like mustache for this purpose.
 
-    $ mustache test-data.yaml server/userdata.sh.mustache > server/userdata.sh
-    $ stem launch server/config.json server/userdata.sh
+    $ mustache userdata.sh.yaml postgres-server/userdata.sh.mustache > postgres-server/userdata.sh
+    $ stem launch postgres-server/config.json postgres-server/userdata.sh
 
 You can, of course, delete the produced userdata.sh once the instance is launched.
 
