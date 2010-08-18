@@ -102,9 +102,10 @@ module Stem
       puts "------------------------------------------"
       puts "AMIs"
       puts "------------------------------------------"
-      images = c.call "DescribeImages", "Owner" => "self"
-      images["imagesSet"].each do
-        puts "%-15s %s" % [ img["name"], img["imageId"] ]
+      images = swirl.call "DescribeImages", "Owner" => "self"
+      iwidth = images["imagesSet"].map { |img| img["name"].length }.max + 1
+      images["imagesSet"].each do |img|
+        puts "%-#{iwidth}s %s" % [ img["name"], img["imageId"] ]
       end
     end
   end
