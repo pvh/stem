@@ -1,11 +1,10 @@
 module Stem
   module Util
-    def array(value)
-      [ value || [] ].flatten
-    end
 
-    def pick(data)
-      array(data)[ rand(2**31) % array(data).size ]
+    def pick(data, blk&)
+      item = data.kind_of? Array ? data[rand(data.length) : data
+      blk.call(item) if blk and item
+      item
     end
 
     def swirl

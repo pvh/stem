@@ -24,9 +24,7 @@ module Stem
         "ImageId"         => ami
       }
 
-      if config["availability_zone"]
-        opt.merge! "Placement.AvailabilityZone" => pick(config["availability_zone"])
-      end
+      pick(config["availability_zone"]) { |zone| opt.merge! "Placement.AvailabilityZone" => zone }
 
       if config["volumes"]
         devices = []
