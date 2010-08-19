@@ -3,7 +3,7 @@ module Stem
     include Util
     extend self
 
-    def launch config, userdata = nil
+    def launch config, userdata = nil, group = "default"
       throw "No config provided" unless config
 
       ami = nil
@@ -16,14 +16,16 @@ module Stem
       throw "No AMI specified." unless ami
 
       opt = {
-        "MinCount" => "1",
-        "MaxCount" => "1",
-        "KeyName" => config["key_name"] || "default",
-        "InstanceType" => config["instance_type"] || "m1.small",
-        "ImageId" => ami
+        "SecurityGroup.1" => group,
+        "MinCount"        => "1",
+        "MaxCount"        => "1",
+        "KeyName"         => config["key_name"] || "default",
+        "InstanceType"    => config["instance_type"] || "m1.small",
+        "ImageId"         => ami
       }
+
       if config["availability_zone"]
-        opt.merge! "Placement.AvailabilityZone" => config["availability_zone"]
+        opt.merge! "Placement.AvailabilityZone" => pick(config["availability_zone"])
       end
 
       if config["volumes"]
@@ -44,13 +46,22 @@ module Stem
         opt.merge!({ "UserData" => Base64.encode64(userdata)})
       end
 
-      response = swirl.call "RunInstances", opt
+      response = run_instances opt, group, config["authorize"]
 
       puts "Success!"
       response["instancesSet"].each do |i|
         return i["instanceId"]
       end
     end
+
+    def run_instances opt, group, authorize
+        response = swirl.call "RunInstances", opt
+      rescue Swirl::InvalidRequest => e
+        raise unless e.message =~ /The security group '\S+' does not exist/
+        Stem::Group.create(group, array(authorize))
+        retry
+    end
+
     def restart instance_id
       swirl.call "RebootInstances", "InstanceId" => instance_id
     end
