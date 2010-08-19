@@ -3,7 +3,7 @@ module Stem
     include Util
     extend self
 
-    def launch config, userdata = nil, group = "default"
+    def launch config, userdata = nil, group = nil
       throw "No config provided" unless config
 
       ami = nil
@@ -16,7 +16,7 @@ module Stem
       throw "No AMI specified." unless ami
 
       opt = {
-        "SecurityGroup.1" => group,
+        "SecurityGroup.1" => group || "default",
         "MinCount"        => "1",
         "MaxCount"        => "1",
         "KeyName"         => config["key_name"] || "default",
