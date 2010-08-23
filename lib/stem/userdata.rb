@@ -29,7 +29,7 @@ module Stem
         require 'erb'
         puts "erb ... #{file}"
         File.open(file.gsub(/.erb.stem$/,""), CREATE_ONLY) do |fff|
-          fff.write ERB.new(File.read(file), 0, '<>').result(vars)
+          fff.write ERB.new(File.read(file), 0, '<>').result(binding)
         end
       end
     end 

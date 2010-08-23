@@ -15,22 +15,52 @@ module Stem
     ## udp://GroupName:4567
     ## udp://GroupName@UserID:4567-9999
 
-    def create(name, rules = [])
+    def create(name)
+        create!(name)
+        true
+      rescue Swirl::InvalidRequest => e
+        raise e unless e.message =~ /The security group '\S+' already exists/
+        false
+    end
+
+    def create!(name)
       description = {}
-      swirl.call("CreateSecurityGroup",  "GroupName" => name, "GroupDescription" => "%%" + description.to_json)
-      swirl.call "AuthorizeSecurityGroupIngress", { "GroupName" => name }.merge(create_auth_rules(name, rules))
+      swirl.call "CreateSecurityGroup",  "GroupName" => name, "GroupDescription" => "%%" + description.to_json
     end
 
-    def create_auth_rules(name, rules)
+    def destroy(name)
+        destroy!(name)
+        true
+      rescue Swirl::InvalidRequest => e
+        puts "===> #{e.class}"
+        puts "===> #{e.message}"
+        puts "#{e.backtrace.join("\n")}"
+        false
+    end
+
+    def destroy!(name)
+      swirl.call "DeleteSecurityGroup", "GroupName" => name
+    end
+
+    def auth_with_defaults(name, rules = [])
+      auth(name, to_array(rules) + defaults(name))
+    end
+
+    def auth(name, rules)
       index = 0
-      (default_rules(name) + rules).inject({}) { |hash,rule| index += 1; hash.merge(authorize(index, rule)) }
+      args = rules.inject({"GroupName" => name}) do |i,rule|
+          index += 1;
+          rule_hash = gen_authorize(index, rule)
+          i.merge(rule_hash)
+      end
+      swirl.call "AuthorizeSecurityGroupIngress", args
     end
 
-    def default_rules(name)
+    def defaults(name)
       [ "tcp://#{name}:", "udp://#{name}:", "icmp://#{name}", "tcp://0.0.0.0/0:22" ]
     end
 
-    def authorize_target(index, target)
+    def gen_authorize_target(index, target)
       if target =~ /^\d+\.\d+\.\d+.\d+\/\d+$/
         { "IpPermissions.#{index}.IpRanges.1.CidrIp"  => target }
       elsif target =~ /^(\w+)@(\w+)$/
@@ -43,7 +73,7 @@ module Stem
       end
     end
 
-    def authorize_ports(index, ports)
+    def gen_authorize_ports(index, ports)
       if ports =~ /^(\d+)-(\d+)$/
         { "IpPermissions.#{index}.FromPort"           => $1,
           "IpPermissions.#{index}.ToPort"             => $2 }
@@ -58,13 +88,13 @@ module Stem
       end
     end
 
-    def authorize(index, rule)
+    def gen_authorize(index, rule)
       if rule =~ /icmp:\/\/(.+)/
         { "IpPermissions.#{index}.IpProtocol"         => "icmp",
           "IpPermissions.#{index}.FromPort"           => "-1",
-          "IpPermissions.#{index}.ToPort"             => "-1" }.merge(authorize_target(index,$1))
+          "IpPermissions.#{index}.ToPort"             => "-1" }.merge(gen_authorize_target(index,$1))
       elsif rule =~ /(tcp|udp):\/\/(.*):(.*)/
-        { "IpPermissions.#{index}.IpProtocol"         => $1 }.merge(authorize_target(index,$2)).merge(authorize_ports(index,$3))
+        { "IpPermissions.#{index}.IpProtocol"         => $1 }.merge(gen_authorize_target(index,$2)).merge(gen_authorize_ports(index,$3))
       else
         raise "bad rule: #{rule}"
       end

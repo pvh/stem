@@ -3,7 +3,7 @@ module Stem
     include Util
     extend self
 
-    def launch config, userdata = nil, group = nil
+    def launch config, userdata = nil
       throw "No config provided" unless config
 
       ami = nil
@@ -16,7 +16,7 @@ module Stem
       throw "No AMI specified." unless ami
 
       opt = {
-        "SecurityGroup.1" => group || "default",
+        "SecurityGroup.#" => config["groups"] || [],
         "MinCount"        => "1",
         "MaxCount"        => "1",
         "KeyName"         => config["key_name"] || "default",
@@ -44,20 +44,13 @@ module Stem
         opt.merge!({ "UserData" => Base64.encode64(userdata)})
       end
 
-      response = run_instances opt, group, config["authorize"]
+      puts "swirl.call 'RunInstances', #{opt.inspect}"
+      response = swirl.call "RunInstances", opt
 
       puts "Success!"
       response["instancesSet"].each do |i|
         return i["instanceId"]
       end
-    end
-
-    def run_instances opt, group, authorize
-        response = swirl.call "RunInstances", opt
-      rescue Swirl::InvalidRequest => e
-        raise unless e.message =~ /The security group '\S+' does not exist/
-        Stem::Group.create(group, array(authorize))
-        retry
     end
 
     def restart instance_id
