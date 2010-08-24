@@ -15,17 +15,25 @@ module Stem
     ## udp://GroupName:4567
     ## udp://GroupName@UserID:4567-9999
 
-    def create(name)
-        create!(name)
+    def get(name)
+        swirl.call("DescribeSecurityGroups", "GroupName.1" => name)["securityGroupInfo"].first
+      rescue Swirl::InvalidRequest
+        raise e unless e.message =~ /The security group '\S+' does not exist/
+        nil
+    end
+
+    def create(name, rules = nil)
+        create!(name, rules)
         true
       rescue Swirl::InvalidRequest => e
         raise e unless e.message =~ /The security group '\S+' already exists/
         false
     end
 
-    def create!(name)
+    def create!(name, rules = nil)
       description = {}
       swirl.call "CreateSecurityGroup",  "GroupName" => name, "GroupDescription" => "%%" + description.to_json
+      auth(name, rules) if rules
     end
 
     def destroy(name)
@@ -42,10 +50,6 @@ module Stem
       swirl.call "DeleteSecurityGroup", "GroupName" => name
     end
 
-    def auth_with_defaults(name, rules = [])
-      auth(name, to_array(rules) + defaults(name))
-    end
-
     def auth(name, rules)
       index = 0
       args = rules.inject({"GroupName" => name}) do |i,rule|
@@ -54,10 +58,6 @@ module Stem
           i.merge(rule_hash)
       end
       swirl.call "AuthorizeSecurityGroupIngress", args
-    end
-
-    def defaults(name)
-      [ "tcp://#{name}:", "udp://#{name}:", "icmp://#{name}", "tcp://0.0.0.0/0:22" ]
     end
 
     def gen_authorize_target(index, target)
