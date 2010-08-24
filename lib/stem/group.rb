@@ -17,7 +17,7 @@ module Stem
 
     def get(name)
         swirl.call("DescribeSecurityGroups", "GroupName.1" => name)["securityGroupInfo"].first
-      rescue Swirl::InvalidRequest
+      rescue Swirl::InvalidRequest => e
         raise e unless e.message =~ /The security group '\S+' does not exist/
         nil
     end
