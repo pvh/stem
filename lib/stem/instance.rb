@@ -44,10 +44,8 @@ module Stem
         opt.merge!({ "UserData" => Base64.encode64(userdata)})
       end
 
-      puts "swirl.call 'RunInstances', #{opt.inspect}"
       response = swirl.call "RunInstances", opt
 
-      puts "Success!"
       response["instancesSet"].each do |i|
         return i["instanceId"]
       end
