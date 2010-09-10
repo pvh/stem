@@ -63,6 +63,10 @@ module Stem
       swirl.call "StopInstances", "InstanceId" => instance_id
     end
 
+    def start instance_id
+      swirl.call "StartInstances", "InstanceId" => instance_id
+    end
+
     def describe instance
       throw "You must provide an instance ID to describe" unless instance
       swirl.call("DescribeInstances", "InstanceId" => instance)["reservationSet"][0]["instancesSet"][0]
