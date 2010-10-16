@@ -1,5 +1,7 @@
 require 'optparse'
 
+require 'stem/userdata'
+
 module Stem
   Version = "0.2.1"
 
@@ -15,6 +17,7 @@ module Stem
 
         opts.separator "Examples:"
         opts.separator "  $ stem launch prototype.config prototype-userdata.sh"
+        opts.separator "  $ stem launch examples/lxc-server/lxc-server.json examples/lxc-server/"
         opts.separator "  $ stem list"
         opts.separator "  $ stem create ami-name instance-id"
 
@@ -58,8 +61,18 @@ module Stem
 
     def launch config_file = nil, userdata_file = nil
       abort "No config file" unless config_file
-      userdata = File.new(userdata_file).read() if userdata_file
-      instance = Stem::Instance::launch(JSON.parse(File.new(config_file).read()), userdata)
+      userdata = case
+                   when userdata_file.nil?
+                     ''
+                   when File.directory?(userdata_file)
+                     Userdata.compile(userdata_file)
+                   when File.file?(userdata_file)
+                     File.new(userdata_file).read
+                   else
+                     abort 'Unable to interpret userdata object.'
+                 end
+      conf = JSON.parse(File.new(config_file).read)
+      instance = Stem::Instance.launch(conf, userdata)
       puts "New instance ID: #{instance}"
     end
 
