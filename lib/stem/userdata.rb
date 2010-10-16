@@ -58,7 +58,7 @@ module Stem
         cd $UD
         exec bash userdata.sh
       SHELL
-      process_header(header) + %x{tar --exclude *.stem -cv - . | bzip2 --best -}
+      process_header(header) + %x{tar --exclude *.stem -cv . | bzip2 --best -}
     end
 
     def process_header(shell)
