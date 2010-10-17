@@ -89,24 +89,30 @@ module Stem
         lookup[ami["imageId"]] = name
       end
 
-      puts "------------------------------------------"
-      puts "Instances"
-      puts "------------------------------------------"
-      instances["reservationSet"].each do |r|
-        groups = r["groupSet"].map { |g| g["groupId"] }.join(",")
-        r["instancesSet"].each do |i|
-            name = lookup[i["imageId"]]
-            puts "%-15s %-15s %-15s %-20s %s" % [ i["instanceId"], i["ipAddress"] || "no ip", i["instanceState"]["name"], groups, name ]
+      reservations = instances["reservationSet"]
+      unless reservations.nil? or reservations.empty?
+        puts "------------------------------------------"
+        puts "Instances"
+        puts "------------------------------------------"
+        reservations.each do |r|
+          groups = r["groupSet"].map { |g| g["groupId"] }.join(",")
+          r["instancesSet"].each do |i|
+              name = lookup[i["imageId"]]
+              puts "%-15s %-15s %-15s %-20s %s" % [ i["instanceId"], i["ipAddress"] || "no ip", i["instanceState"]["name"], groups, name ]
+          end
         end
       end
 
-      puts "------------------------------------------"
-      puts "AMIs"
-      puts "------------------------------------------"
-      images = swirl.call "DescribeImages", "Owner" => "self"
-      iwidth = images["imagesSet"].map { |img| img["name"].length }.max + 1
-      images["imagesSet"].each do |img|
-        puts "%-#{iwidth}s %s" % [ img["name"], img["imageId"] ]
+      result = swirl.call "DescribeImages", "Owner" => "self"
+      images = result["imagesSet"]
+      unless images.nil? or images.empty?
+        puts "------------------------------------------"
+        puts "AMIs"
+        puts "------------------------------------------"
+        iwidth = images.map { |img| img["name"].length }.max + 1
+        images.each do |img|
+          puts "%-#{iwidth}s %s" % [ img["name"], img["imageId"] ]
+        end
       end
     end
   end
