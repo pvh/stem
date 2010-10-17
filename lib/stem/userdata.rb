@@ -48,22 +48,20 @@ module Stem
     def make_zip_shell
       # We'll comment outside here, to keep from wasting valuable userdata bytes.
       # we decompress into /root/userdata, then run userdata.sh
-      header = <<-'SHELL'
-        #!/bin/bash
-        exec >> /var/log/userdata.log 2>&1
-        echo BOOTING `date`
-        UD=~/userdata
-        mkdir -p $UD
-        tail -n +HEADER_LINES "$0" | tar -jx -C $UD -f -
-        cd $UD
-        exec bash userdata.sh
+      header = <<-SHELL
+#!/bin/bash
+exec >> /var/log/userdata.log 2>&1
+date --utc '+BOOTING %FT%TZ'
+UD=~/userdata
+mkdir -p $UD
+sed '1,/^#### THE END$/ d' "$0" | tar -jx -C $UD
+cd $UD
+exec bash userdata.sh
+#### THE END
       SHELL
-      process_header(header) + %x{tar --exclude *.stem -cv . | bzip2 --best -}
+      header + %x{tar --exclude *.stem -cv . | bzip2 --best -}
     end
 
-    def process_header(shell)
-      shell.gsub(/HEADER_LINES/, (shell.split("\n").size + 1).to_s).gsub(/^ +/,'')
-    end
   end
 end
 
