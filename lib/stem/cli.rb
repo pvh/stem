@@ -63,7 +63,7 @@ module Stem
       abort "No config file" unless config_file
       userdata = case
                    when userdata_file.nil?
-                     ''
+                     nil
                    when File.directory?(userdata_file)
                      Userdata.compile(userdata_file)
                    when File.file?(userdata_file)
