@@ -1,0 +1,9 @@
+# /etc/fstab: static file system information.
+# <file system>  <mount point>  <type>  <options>  <dump>  <pass>
+proc      /proc     proc    nodev,noexec,nosuid     0  0
+/dev/sda1 /         ext3    defaults,noatime        0  0
+/dev/sdb  /tmp      auto    defaults,noatime        0  0
+/tmp      /var/tmp  bind    defaults,bind           0  0
+
+
+
