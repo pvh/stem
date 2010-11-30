@@ -8,7 +8,7 @@ end
 
 task :gemspec do
   load $gemspec_file
-  $gemspec = spec
+  $gemspec = $spec
 end
 task :gemspec => :gemspec_file
 
