@@ -119,8 +119,8 @@ module Stem
       end
     end
 
-    def tagged tags
-      tags = [ tags ] unless tags.is_a? Array
+    def tagged *tags
+      return if tags.empty?
       opts = { "tag-key" => tags.map {|t| t.to_s } }
       instances = swirl.call "DescribeInstances", get_filter_opts(opts)
 
