@@ -23,7 +23,7 @@ You can monitor the instance's fabrication process via
 
 The instance you created will boot, install some packages on top of a stock Ubuntu 10.4 AMI, then (if everything goes according to plan) shut itself down and go into a "stopped" state that indicates success. If any part of the stem fabrication fails, the instance will remain running. Once the instance reaches stopped, type
 
-    $ stem create postgres-server <instance-id>
+    $ stem create postgres-server <instance-id> appserver,current,tag_3
 
 The AMI may take as long as half an hour to build, depending on how the gremlins in EC2 are behaving on any given day. You can check on their progress with
 
