@@ -19,7 +19,7 @@ module Stem
         opts.separator "  $ stem launch prototype.config prototype-userdata.sh"
         opts.separator "  $ stem launch examples/lxc-server/lxc-server.json examples/lxc-server/"
         opts.separator "  $ stem list"
-        opts.separator "  $ stem create ami-name instance-id"
+        opts.separator "  $ stem create ami-name instance-id ami_tag1,ami_tag2"
 
         opts.separator " "
         opts.separator "Options:"
@@ -76,9 +76,10 @@ module Stem
       puts "New instance ID: #{instance}"
     end
 
-    def create name = nil, instance = nil
-      abort "Usage: create ami-name instance-to-capture" unless name && instance
-      image_id = Stem::Image::create(name, instance)
+    def create name = nil, instance = nil, tag_list = nil
+      abort "Usage: create ami-name instance-to-capture ami_tag1,ami_tag2" unless name && instance
+      tags = tag_list ? tag_list.split(',') : []
+      image_id = Stem::Image::create(name, instance, tags)
       puts "New image ID: #{image_id}"
     end
 

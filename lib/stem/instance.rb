@@ -12,6 +12,9 @@ module Stem
       elsif config["ami-name"]
         ami = Image::named(config["ami-name"])
         throw "AMI named #{config["ami-name"]} was not found. (Does it need creating?)" unless ami
+      elsif config["ami-tags"]
+        ami = Image::tagged(config['ami-tags'])
+        throw "AMI tagged with #{config['ami-tags'].join(', ')} was not found. (Does it need creating?)" unless ami
       end
       throw "No AMI specified." unless ami
 
@@ -45,10 +48,10 @@ module Stem
       end
 
       response = swirl.call "RunInstances", opt
+      instance_id = response["instancesSet"].first["instanceId"]
 
-      response["instancesSet"].each do |i|
-        return i["instanceId"]
-      end
+      Tag::create(instance_id, config['tags']) if config['tags'] && !config['tags'].empty?
+      instance_id
     end
 
     def restart instance_id
@@ -114,6 +117,20 @@ module Stem
           puts "%-#{iwidth}s %s" % [ img["name"], img["imageId"] ]
         end
       end
+    end
+
+    def tagged tags
+      tags = [ tags ] unless tags.is_a? Array
+      opts = { "tag-key" => tags.map {|t| t.to_s } }
+      instances = swirl.call "DescribeInstances", get_filter_opts(opts)
+
+      ids = []
+      instances["reservationSet"].each do |r|
+        r["instancesSet"].each do |i|
+          ids << i["instanceId"]
+        end
+      end
+      ids
     end
   end
 end
