@@ -59,7 +59,7 @@ cd $UD
 exec bash userdata.sh
 #### THE END
       SHELL
-      header + %x{tar --exclude *.stem -cv . | bzip2 --best -}
+      header + %x{tar --exclude \\*.stem -cv . | bzip2 --best -}
     end
 
   end
