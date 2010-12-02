@@ -10,4 +10,5 @@ require 'stem/userdata'
 require 'stem/instance'
 require 'stem/image'
 require 'stem/ip'
+require 'stem/tag'
 
