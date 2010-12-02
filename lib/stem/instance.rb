@@ -104,7 +104,7 @@ module Stem
       end
 
       result = swirl.call "DescribeImages", "Owner" => "self"
-      images = result["imagesSet"]
+      images = result["imagesSet"].select { |img| img["name"] }
       unless images.nil? or images.empty?
         puts "------------------------------------------"
         puts "AMIs"
