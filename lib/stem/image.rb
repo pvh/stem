@@ -19,10 +19,9 @@ module Stem
       ami = i["imagesSet"].select {|m| m["name"] == name }.map { |m| m["imageId"] }.first
     end
 
-    def tagged *tags
+    def tagged tags
       return if tags.empty?
-      opts = { "tag-key" => tags.map {|t| t.to_s } }
-      opts = get_filter_opts(opts).merge("Owner" => "self")
+      opts = tags_to_filter(tags).merge("Owner" => "self")
       swirl.call("DescribeImages", opts)['imagesSet'].map {|image| image['imageId'] }
     end
 

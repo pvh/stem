@@ -14,9 +14,12 @@ module Stem
     end
 
     def tag_opts(tags)
-      if tags.is_a? Array
+      if tags.is_a? Hash
+        { "Tag.#.Key" => tags.keys.map(&:to_s),
+          "Tag.#.Value" => tags.values }
+      elsif tags.is_a? Array
         {
-          "Tag.#.Key" => tags,
+          "Tag.#.Key" => tags.map(&:to_s),
           "Tag.#.Value" => (1..tags.size).map { '' }
         }
       else
