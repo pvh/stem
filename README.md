@@ -40,5 +40,5 @@ You can, of course, delete the produced userdata.sh once the instance is launche
 
 ##Inspiration and Thanks
 
-Stem is almost entirely based on Orion Henry's Judo gem, and Blake Mizerany's work on variously patton, carealot, napkin, and several other experiments. Thanks also for feedback, testing and patches from Adam Wiggins, Mark McGranahan, Noah Zoschke, and Jason Dusek.
+Stem is almost entirely based on Orion Henry's Judo gem, and Blake Mizerany's work on variously patton, carealot, napkin, and several other experiments. Thanks also for feedback, testing and patches from Adam Wiggins, Mark McGranahan, Noah Zoschke, Jason Dusek, and Blake Gentry.
 
