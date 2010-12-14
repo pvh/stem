@@ -13,7 +13,7 @@ module Stem
         ami = Image::named(config["ami-name"])
         throw "AMI named #{config["ami-name"]} was not found. (Does it need creating?)" unless ami
       elsif config["ami-tags"]
-        ami = Image::tagged(config['ami-tags'])
+        ami = Image::tagged(config['ami-tags'])[0]
         throw "AMI tagged with #{config['ami-tags'].inspect} was not found. (Does it need creating?)" unless ami
       end
       throw "No AMI specified." unless ami
