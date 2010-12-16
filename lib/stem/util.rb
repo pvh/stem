@@ -25,7 +25,13 @@ module Stem
 
     def tags_to_filter(tags)
       if tags.is_a? Hash
-        get_filter_opts( tags.inject({}) {|h, (k, v)| h["tag:#{k}"] = v; h })
+        tags = tags.inject({}) do |h, (k, v)|
+          # this is really awful. how can i make this non-awful?
+          k = "tag:#{k}" unless k.to_s == "architecture"
+          h[k.to_s] = v
+          h
+        end
+        get_filter_opts(tags)
       elsif tags.is_a? Array
         get_filter_opts( { "tag-key" => tags.map(&:to_s) })
       else
