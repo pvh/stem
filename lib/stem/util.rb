@@ -12,7 +12,13 @@ module Stem
         }
       else
         account = account.to_sym
-        data = YAML.load_file(etc)
+        
+        if File.exists?(etc)
+          data = YAML.load_file(etc)
+        else
+          abort("I was expecting to find a .swirl file in your home directory.")
+        end
+        
         if data.key?(account)
           data[account]
         else
