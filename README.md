@@ -7,6 +7,22 @@ Stem is a thin, light-weight EC2 instance management library which abstracts the
 
 Stem is named after the model it encourages -- simple AMIs created on demand with many running copies derived from that.
 
+##Configuration
+
+Stem relies on the Swirl library, which needs to be passed your AWS credentials to do its magic.  There are two ways to set these.
+
+In your environment:
+
+	export AWS_ACCESS_KEY_ID=my_access_key
+	export AWS_SECRET_ACCESS_KEY=my_secret_key
+
+or in ~/.swirl:
+
+	--- 
+	:default: 
+	  :aws_access_key_id: my_access_key
+	  :aws_secret_access_key: my_secret_key
+
 ##Usage
 
 You can use Stem to manage your instances either from the commandline or directly via the library. You should create an instance which will serve as your "stem" and be converted into an AMI. Once you have tested this instance, create a snapshot of the instance, then use it by name to launch new instances with their own individual configuration.
