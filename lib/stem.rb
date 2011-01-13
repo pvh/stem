@@ -11,5 +11,6 @@ require 'stem/instance'
 require 'stem/instance_types'
 require 'stem/image'
 require 'stem/ip'
+require 'stem/key_pair'
 require 'stem/tag'
 
