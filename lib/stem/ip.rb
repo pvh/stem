@@ -12,6 +12,10 @@ module Stem
       result == "true"
     end
 
+    def disassociate ip
+      result = swirl.call("DisassociateAddress", "PublicIp" => ip)
+    end
+
     def release ip
       result = swirl.call("ReleaseAddress", "PublicIp" => ip)
     end
