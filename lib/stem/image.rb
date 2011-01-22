@@ -6,7 +6,19 @@ module Stem
     def create name, instance, tags
       raise "You already have an image named '#{name}'" if named(name)
       image_id = swirl.call("CreateImage", "Name" => name, "InstanceId" => instance)["imageId"]
-      Tag::create(image_id, tags) unless tags.empty?
+      unless tags.empty?
+        # We'll retry this once if necessary due to consistency issues on the AWS side
+        i = 0
+        begin
+          Tag::create(image_id, tags)
+        rescue Swirl::InvalidRequest => e
+          if i < 1 && e.message =~ /does not exist/
+            i += 1
+            retry
+          end
+          raise e
+        end
+      end
       image_id
     end
 
