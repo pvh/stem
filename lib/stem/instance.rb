@@ -50,7 +50,18 @@ module Stem
       response = swirl.call "RunInstances", opt
       instance_id = response["instancesSet"].first["instanceId"]
 
-      Tag::create(instance_id, config['tags']) if config['tags'] && !config['tags'].empty?
+      if config['tags'] && !config['tags'].empty?
+        i = 0
+        begin
+          Tag::create(instance_id, config['tags'])
+        rescue Swirl::InvalidRequest => e
+          if i < 5 && e.message =~ /does not exist/
+            i += 1
+            retry
+          end
+          raise e
+        end
+      end
       instance_id
     end
 

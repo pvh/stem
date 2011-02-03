@@ -12,7 +12,7 @@ module Stem
         begin
           Tag::create(image_id, tags)
         rescue Swirl::InvalidRequest => e
-          if i < 1 && e.message =~ /does not exist/
+          if i < 5 && e.message =~ /does not exist/
             i += 1
             retry
           end
