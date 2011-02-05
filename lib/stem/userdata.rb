@@ -17,6 +17,8 @@ module Stem
           process_erb(opts[:erb_binding])
           process_mustache(opts[:mustache_vars])
           raise "must contain a userdata.sh" unless File.exists?("userdata.sh")
+          # Set constant timestamps for all files to guarantee hashing consistency
+          set_all_timestamps(tmp_path, "200210272016")
           make_zip_shell
         end
       end
@@ -60,6 +62,18 @@ exec bash userdata.sh
 #### THE END
       SHELL
       header + %x{tar --exclude \\*.stem -cv . | bzip2 --best -}
+    end
+
+    def set_all_timestamps(file_or_dir, time)
+      Dir.foreach(file_or_dir) do |item|
+        path = file_or_dir + '/' + item
+        if File.directory?(path) && item != '.'
+          next if item == '..'
+          set_all_timestamps(path, time)
+        else
+          `touch -t #{time} #{path}`
+        end
+      end
     end
 
   end
