@@ -27,8 +27,9 @@ module Stem
     end
 
     def named name
-      i = swirl.call "DescribeImages", "Owner" => "self"
-      ami = i["imagesSet"].select {|m| m["name"] == name }.map { |m| m["imageId"] }.first
+      opts = get_filter_opts("name" => name).merge("Owner" => "self")
+      i = swirl.call("DescribeImages", opts)["imagesSet"].first
+      i ? i["imageId"] : nil
     end
 
     def tagged tags
