@@ -29,6 +29,10 @@ module Stem
       @swirl = Swirl::EC2.new config
     end
 
+    def tagset_to_hash(tagset)
+      tagset["item"].inject({}) { |h,v| h[v["value"]] = v["key"]; h }
+    end
+
     def tags_to_filter(tags)
       if tags.is_a? Hash
         tags = tags.inject({}) do |h, (k, v)|
