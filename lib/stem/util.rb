@@ -30,7 +30,17 @@ module Stem
     end
 
     def tagset_to_hash(tagset)
-      tagset["item"].inject({}) { |h,v| h[v["value"]] = v["key"]; h }
+      tagset["item"].inject({}) do |h,item|
+        # this had better be worth it
+        k, v = item["key"], item["value"]
+        unless h[k]
+          h[k] = v
+        else
+          h[k] = [h[k]] unless h[k].is_a? Array
+          h[k] << v
+        end
+        h
+      end
     end
 
     def tags_to_filter(tags)
