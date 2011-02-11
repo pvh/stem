@@ -14,3 +14,6 @@ require 'stem/ip'
 require 'stem/key_pair'
 require 'stem/tag'
 
+module Stem
+  autoload :Family, 'stem/family'
+end
