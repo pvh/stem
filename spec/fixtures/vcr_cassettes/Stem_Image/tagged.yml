@@ -42,10 +42,10 @@
     headers: 
       content-type: 
       - text/xml;charset=UTF-8
-      server: 
-      - AmazonEC2
       date: 
       - Fri, 11 Feb 2011 02:28:58 GMT
+      server: 
+      - AmazonEC2
       transfer-encoding: 
       - chunked
     body: |-
@@ -55,3 +55,4 @@
           <imagesSet/>
       </DescribeImagesResponse>
     http_version: "1.1"
+
