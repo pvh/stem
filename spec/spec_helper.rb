@@ -29,4 +29,16 @@ else
     c.stub_with :webmock
     c.default_cassette_options = { :match_requests_on => [:uri, :method, :body], :record => :none }
   end
+
+  # Stub out Stem config loading to use constant values
+  Stem::Util.class_eval do
+    private
+    def load_config
+      {
+        :aws_access_key_id => "AKIAABCDEFGHIJKLMNOP",
+        :aws_secret_access_key => "secret_access_key",
+        :version => "2010-08-31"
+      }
+    end
+  end
 end
