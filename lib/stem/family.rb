@@ -15,7 +15,7 @@ module Stem
       prev.each { |ami| Stem::Tag::destroy(ami, :release => release) }
     end
     
-    def in_family? family, ami
+    def member? family, ami
       desc = Stem::Image::describe(ami)
       throw "AMI #{ami} does not exist" if desc.nil?
       tagset_to_hash(["tagSet"])["family"] == family
@@ -23,7 +23,7 @@ module Stem
     
     def release family, release_name, *amis
       amis.each do |ami|
-        throw "#{ami} not part of #{family}" unless in_family?(family, ami)
+        throw "#{ami} not part of #{family}" unless member?(family, ami)
       end
       unrelease family, release_name
       amis.each { |ami| Stem::Tag::create(ami, :release => release_name) }
