@@ -1,5 +1,3 @@
-require 'sha1'
-
 module Stem
   module Family
     extend self
@@ -22,7 +20,7 @@ module Stem
       throw "AMI #{ami} does not exist" if desc.nil?
       tagset_to_hash(["tagSet"])["family"] == family
     end
-    
+
     def release family, release_name, *amis
       amis.each do |ami|
         throw "#{ami} not part of #{family}" unless member?(family, ami)
@@ -36,6 +34,18 @@ module Stem
         puts "[#{family}|#{Time.now.to_s}] #{msg}"
       }
 
+      config = aggregate_hash_options_for_ami(config)
+      sha1 = Digest::SHA1::hexdigest( userdata + config.to_s )
+
+      unless ami_opts.delete('force')
+        # Check if image already exists w/ same SHA1 (source AMI + userdata)
+        amis = Stem::Image.named("#{family}-#{sha1}")
+        if amis
+          log "Image in family #{family} with SHA1 #{sha1} has already been built (#{amis.last})."
+          return false
+        end
+      end
+
       log.call "Beginning to build image for #{family}"
       log.call "Config:\n------\n#{ config.inspect }\n-------"
       instance_id = Stem::Instance.launch(config, userdata)
@@ -43,19 +53,19 @@ module Stem
       log.call "Booting #{instance_id} to produce your prototype instance"
       wait_for_stopped instance_id, log
 
-      build_hash = SHA1::hexdigest( userdata + config.to_s )
-      image_id = Stem::Image.create("#{family}-#{build_hash}",
+      image_id = Stem::Image.create("#{family}-#{sha1}",
                                     instance_id,
                                     {
+                                      :created => Time.now.utc.iso8601,
                                       :family => family,
-                                      :created => Time.now.utc.iso8601
+                                      :source_ami => config["ami"]
                                     })
       log.call "Image ID is #{image_id}"
 
       wait_for_available(image_id, log)
 
       log "Terminating #{instance_id} now that the image is captured"
-      Stem::Instance::terminate(instance_id)
+      Stem::Instance::destroy(instance_id)
     end
 
     protected
@@ -70,18 +80,21 @@ module Stem
     end
 
     def wait_for_available(image_id, log)
-      log.call "waiting for image to finish capturing..."
+      log.call "Waiting for image to finish capturing..."
       while sleep 10
         begin
           state = Stem::Image.describe(image_id)["imageState"]
-          log.call "image #{image_id} #{state}"
+          log.call "Image #{image_id} #{state}"
           if state == "available"
-            log.call "image capturing succeeded"
+            log.call "Image capturing succeeded"
             break
           elsif state == "pending"
             # continue
+          elsif state == "terminated"
+            log "Image capture failed (#{image_id})"
+            return false
           else
-            throw "image unexpectedly entered #{state}"
+            throw "Image unexpectedly entered #{state}"
           end
         rescue Swirl::InvalidRequest => e
           raise unless e.message =~ /does not exist/

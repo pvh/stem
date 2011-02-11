@@ -69,6 +69,23 @@ module Stem
       end
     end
 
+    def aggregate_hash_options_for_ami(config)
+      if config["ami"]
+        return config
+      elsif config["ami-name"]
+        name = config.delete("ami-name")
+        config["ami"] = Image::named(name)
+        throw "AMI named #{name} was not found. (Does it need creating?)" unless config["ami"]
+      elsif config["ami-tags"]
+        tags = config.delete('ami-tags')
+        config["ami"] = Image::tagged(tags)[0]
+        throw "AMI tagged with #{tags.inspect} was not found. (Does it need creating?)" unless config["ami"]
+      else
+        throw "No AMI specified."
+      end
+      config
+    end
+
   end
 end
 
