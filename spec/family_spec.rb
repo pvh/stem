@@ -1,5 +1,4 @@
-require 'rspec'
-require 'lib/stem'
+require 'spec_helper'
 
 describe Stem::Family do
 
@@ -8,10 +7,10 @@ describe Stem::Family do
 
     it "should return an AMI id when given the right input" do
       Stem::Image.should_receive(:tagged).with(
-        :family => "postgres",
-        :release => "production",
-        :architecture => "x86_64"
-        ).and_return(["ami-XXXXXX"])
+         :family => "postgres",
+         :release => "production",
+         :architecture => "x86_64"
+         ).and_return(["ami-XXXXXX"])
       Stem::Family.ami_for("postgres", "production").should == "ami-XXXXXX"
     end
 
