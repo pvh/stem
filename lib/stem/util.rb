@@ -31,14 +31,8 @@ module Stem
 
     def tagset_to_hash(tagset)
       tagset["item"].inject({}) do |h,item|
-        # this had better be worth it
         k, v = item["key"], item["value"]
-        unless h[k]
-          h[k] = v
-        else
-          h[k] = [h[k]] unless h[k].is_a? Array
-          h[k] << v
-        end
+        h[k] = v
         h
       end
     end
@@ -61,7 +55,8 @@ module Stem
 
     def get_filter_opts(filters)
       opts = {}
-      filters.each_with_index do |(k, v), n|
+      filters.keys.sort.each_with_index do |k, n|
+        v = filters[k]
         opts["Filter.#{n}.Name"] = k.to_s
         v = [ v ] unless v.is_a? Array
         v.each_with_index do |v, i|
