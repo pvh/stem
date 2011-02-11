@@ -1,32 +1,7 @@
 module Stem
   module Util
     def swirl
-      account = "default"
-      etc = "#{ENV["HOME"]}/.swirl"
-      config = \
-      if ENV["AWS_ACCESS_KEY_ID"] && ENV["AWS_SECRET_ACCESS_KEY"]
-        {
-          :aws_access_key_id => ENV["AWS_ACCESS_KEY_ID"],
-          :aws_secret_access_key => ENV["AWS_SECRET_ACCESS_KEY"],
-          :version => "2010-08-31"
-        }
-      else
-        account = account.to_sym
-
-        if File.exists?(etc)
-          data = YAML.load_file(etc)
-        else
-          abort("I was expecting to find a .swirl file in your home directory.")
-        end
-
-        if data.key?(account)
-          data[account]
-        else
-          abort("I don't see the account you're looking for")
-        end
-      end
-
-      @swirl = Swirl::EC2.new config
+      @swirl ||= Swirl::EC2.new load_config
     end
 
     def tagset_to_hash(tagset)
@@ -65,6 +40,35 @@ module Stem
       end
       opts
     end
+
+    private
+
+    def load_config
+      account = "default"
+      etc = "#{ENV["HOME"]}/.swirl"
+      if ENV["AWS_ACCESS_KEY_ID"] && ENV["AWS_SECRET_ACCESS_KEY"]
+        {
+          :aws_access_key_id => ENV["AWS_ACCESS_KEY_ID"],
+          :aws_secret_access_key => ENV["AWS_SECRET_ACCESS_KEY"],
+          :version => "2010-08-31"
+        }
+      else
+        account = account.to_sym
+
+        if File.exists?(etc)
+          data = YAML.load_file(etc)
+        else
+          abort("I was expecting to find a .swirl file in your home directory.")
+        end
+
+        if data.key?(account)
+          data[account]
+        else
+          abort("I don't see the account you're looking for")
+        end
+      end
+    end
+
   end
 end
 
