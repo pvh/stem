@@ -48,7 +48,7 @@ module Stem
                                     instance_id,
                                     {
                                       :family => family,
-                                      :created => Time.now.utc.iso_8601
+                                      :created => Time.now.utc.iso8601
                                     })
       log.call "Image ID is #{image_id}"
 
