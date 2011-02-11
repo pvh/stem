@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Stem::Image do
 
   context "tagged" do
-    use_vcr_cassette :record => :new_episodes
+    use_vcr_cassette
 
     it { should respond_to :tagged }
 

@@ -14,10 +14,10 @@
     headers: 
       content-type: 
       - text/xml;charset=UTF-8
-      date: 
-      - Fri, 11 Feb 2011 02:27:25 GMT
       server: 
       - AmazonEC2
+      date: 
+      - Fri, 11 Feb 2011 02:27:25 GMT
       transfer-encoding: 
       - chunked
     body: |-
@@ -42,16 +42,156 @@
     headers: 
       content-type: 
       - text/xml;charset=UTF-8
-      server: 
-      - AmazonEC2
       date: 
       - Fri, 11 Feb 2011 02:28:58 GMT
+      server: 
+      - AmazonEC2
       transfer-encoding: 
       - chunked
     body: |-
       <?xml version="1.0" encoding="UTF-8"?>
       <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
           <requestId>68876b9b-91a7-423d-be53-30aad385000c</requestId>
+          <imagesSet/>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAIJIOYYAEJ3KWSKUQ&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T02%3A31%3A44Z&Version=2010-08-31&Signature=eC%2ByZUntIXwhu5ClrDg7R6hH4bnUUHejaOdBJ0SzleI%3D
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      server: 
+      - AmazonEC2
+      date: 
+      - Fri, 11 Feb 2011 02:31:45 GMT
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>cccb6d87-8717-431e-a583-83791bc42b9b</requestId>
+          <imagesSet/>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAIJIOYYAEJ3KWSKUQ&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T02%3A31%3A47Z&Version=2010-08-31&Signature=HY56LCVzSaqVGDVCArHNPYUBrDKc%2FRNOC5xwscextMs%3D
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      date: 
+      - Fri, 11 Feb 2011 02:31:47 GMT
+      server: 
+      - AmazonEC2
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>2f12b8b4-4154-47eb-9a8e-049c31ed474b</requestId>
+          <imagesSet/>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAIJIOYYAEJ3KWSKUQ&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T02%3A31%3A50Z&Version=2010-08-31&Signature=KinlkwRf0I30x24hG6jbwaaMUd%2FtuHQz32X3M6G3H7Q%3D
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      server: 
+      - AmazonEC2
+      date: 
+      - Fri, 11 Feb 2011 02:31:50 GMT
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>d54a7a70-4b11-4ad5-a68a-a51525e98a4d</requestId>
+          <imagesSet/>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAIJIOYYAEJ3KWSKUQ&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T02%3A41%3A44Z&Version=2010-08-31&Signature=Nvw3zydoihVU4INXh3bVrcZWLtQzUI9uFK8EpG7WHTM%3D
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      date: 
+      - Fri, 11 Feb 2011 02:41:45 GMT
+      server: 
+      - AmazonEC2
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>6531e541-bf1b-46c3-8ad7-e8961293b888</requestId>
+          <imagesSet/>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAIJIOYYAEJ3KWSKUQ&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T02%3A45%3A12Z&Version=2010-08-31&Signature=16q0IeaZzT%2BAVgQXVW7fDmTbVQ5PAkEMN6sB8fPQoBM%3D
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      server: 
+      - AmazonEC2
+      date: 
+      - Fri, 11 Feb 2011 02:45:13 GMT
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>203351df-acca-4d94-ae1b-02ed7ec4cb3f</requestId>
           <imagesSet/>
       </DescribeImagesResponse>
     http_version: "1.1"
