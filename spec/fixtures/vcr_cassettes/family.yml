@@ -1,0 +1,187 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAJCMZCYU5RS674NOQ&Action=DescribeImages&Filter.0.Name=architecture&Filter.0.Value.0=x86_64&Filter.1.Name=tag%3Afamily&Filter.1.Value.0=postgres&Filter.2.Name=tag%3Arelease&Filter.2.Value.0=production&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T01%3A45%3A28Z&Version=2010-08-31&Signature=idWIJU%2FV4kKZmGl%2BeAdR7zsrqaBXGmHIgJdDxZcNwYc%3D
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      date: 
+      - Fri, 11 Feb 2011 01:45:28 GMT
+      server: 
+      - AmazonEC2
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>9a8ad5fb-9688-423e-99a2-08532e152ec6</requestId>
+          <imagesSet/>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAJCMZCYU5RS674NOQ&Action=DescribeImages&Filter.0.Name=architecture&Filter.0.Value.0=x86_64&Filter.1.Name=tag%3Afamily&Filter.1.Value.0=postgres&Filter.2.Name=tag%3Arelease&Filter.2.Value.0=production&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T01%3A50%3A39Z&Version=2010-08-31&Signature=N5jmfUH2HdJs8EPs45UCTB9CSA2FTV5npAb%2B1GWO4wo%3D
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      server: 
+      - AmazonEC2
+      date: 
+      - Fri, 11 Feb 2011 01:50:40 GMT
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>158e6b7f-4c7a-4f56-be86-c258ee517f16</requestId>
+          <imagesSet>
+              <item>
+                  <imageId>ami-e67a8a8f</imageId>
+                  <imageLocation>646476705259/postgres-57e6055179710692885fc12fa0025da14ca1ca04</imageLocation>
+                  <imageState>available</imageState>
+                  <imageOwnerId>646476705259</imageOwnerId>
+                  <isPublic>false</isPublic>
+                  <architecture>x86_64</architecture>
+                  <imageType>machine</imageType>
+                  <kernelId>aki-0b4aa462</kernelId>
+                  <name>postgres-57e6055179710692885fc12fa0025da14ca1ca04</name>
+                  <rootDeviceType>ebs</rootDeviceType>
+                  <rootDeviceName>/dev/sda1</rootDeviceName>
+                  <blockDeviceMapping>
+                      <item>
+                          <deviceName>/dev/sda1</deviceName>
+                          <ebs>
+                              <snapshotId>snap-2b2a2946</snapshotId>
+                              <volumeSize>15</volumeSize>
+                              <deleteOnTermination>true</deleteOnTermination>
+                          </ebs>
+                      </item>
+                  </blockDeviceMapping>
+                  <virtualizationType>paravirtual</virtualizationType>
+                  <tagSet>
+                      <item>
+                          <key>family</key>
+                          <value>postgres</value>
+                      </item>
+                      <item>
+                          <key>source</key>
+                          <value>ami-4b4ba522</value>
+                      </item>
+                      <item>
+                          <key>created_at</key>
+                          <value>2011-02-04T23:00:58Z</value>
+                      </item>
+                      <item>
+                          <key>release</key>
+                          <value>production</value>
+                      </item>
+                      <item>
+                          <key>sha1</key>
+                          <value>57e6055179710692885fc12fa0025da14ca1ca04</value>
+                      </item>
+                  </tagSet>
+              </item>
+          </imagesSet>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAJCMZCYU5RS674NOQ&Action=DescribeImages&ImageId=ami-e67a8a8f&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T01%3A55%3A47Z&Version=2010-08-31&Signature=1WIK2FTDxrkitUxWvugVRMi3rgozNowL8ULNLrSGE94%3D
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      server: 
+      - AmazonEC2
+      date: 
+      - Fri, 11 Feb 2011 01:55:48 GMT
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>06aff765-c53c-48f0-a458-f48aa6f84118</requestId>
+          <imagesSet>
+              <item>
+                  <imageId>ami-e67a8a8f</imageId>
+                  <imageLocation>646476705259/routing_transient_redis-57e6055179710692885fc12fa0025da14ca1ca04</imageLocation>
+                  <imageState>available</imageState>
+                  <imageOwnerId>646476705259</imageOwnerId>
+                  <isPublic>false</isPublic>
+                  <architecture>x86_64</architecture>
+                  <imageType>machine</imageType>
+                  <kernelId>aki-0b4aa462</kernelId>
+                  <name>routing_transient_redis-57e6055179710692885fc12fa0025da14ca1ca04</name>
+                  <rootDeviceType>ebs</rootDeviceType>
+                  <rootDeviceName>/dev/sda1</rootDeviceName>
+                  <blockDeviceMapping>
+                      <item>
+                          <deviceName>/dev/sda1</deviceName>
+                          <ebs>
+                              <snapshotId>snap-2b2a2946</snapshotId>
+                              <volumeSize>15</volumeSize>
+                              <deleteOnTermination>true</deleteOnTermination>
+                          </ebs>
+                      </item>
+                  </blockDeviceMapping>
+                  <virtualizationType>paravirtual</virtualizationType>
+                  <tagSet>
+                      <item>
+                          <key>os</key>
+                          <value>Ubuntu 10.04</value>
+                      </item>
+                      <item>
+                          <key>arch</key>
+                          <value>64</value>
+                      </item>
+                      <item>
+                          <key>family</key>
+                          <value>postgres</value>
+                      </item>
+                      <item>
+                          <key>source</key>
+                          <value>ami-4b4ba522</value>
+                      </item>
+                      <item>
+                          <key>created_at</key>
+                          <value>2011-02-04T23:00:58Z</value>
+                      </item>
+                      <item>
+                          <key>release</key>
+                          <value>production</value>
+                      </item>
+                      <item>
+                          <key>sha1</key>
+                          <value>57e6055179710692885fc12fa0025da14ca1ca04</value>
+                      </item>
+                  </tagSet>
+              </item>
+          </imagesSet>
+      </DescribeImagesResponse>
+    http_version: "1.1"
