@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe Stem::Image do
-  use_vcr_cassette :record => :new_episodes
 
-  describe "tagged" do
+  context "tagged" do
+    use_vcr_cassette :record => :new_episodes
+
     it { should respond_to :tagged }
 
     it "should return an empty array when no images exist with the specified tags" do
