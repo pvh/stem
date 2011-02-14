@@ -14,16 +14,105 @@
     headers: 
       content-type: 
       - text/xml;charset=UTF-8
+      date: 
+      - Mon, 14 Feb 2011 05:06:50 GMT
       server: 
       - AmazonEC2
-      date: 
-      - Mon, 14 Feb 2011 03:53:43 GMT
       transfer-encoding: 
       - chunked
     body: |-
       <?xml version="1.0" encoding="UTF-8"?>
       <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
-          <requestId>881b384c-f0ed-4a68-b5d1-bd7eff1d1a38</requestId>
+          <requestId>d43ded72-3669-4a7f-b6a3-d48732ae3284</requestId>
           <imagesSet/>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&Filter.0.Name=architecture&Filter.0.Value.0=x86_64&Filter.1.Name=tag%3Aslot&Filter.1.Value.0=logplex&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      server: 
+      - AmazonEC2
+      date: 
+      - Mon, 14 Feb 2011 05:06:51 GMT
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>24c2d8de-68d8-446b-bf47-dbada676c3e2</requestId>
+          <imagesSet>
+              <item>
+                  <imageId>ami-0686766f</imageId>
+                  <imageLocation>646412345678/logplex-ec3e8c94ece2a26b46c948bf02c1b787b7a43569</imageLocation>
+                  <imageState>available</imageState>
+                  <imageOwnerId>646412345678</imageOwnerId>
+                  <isPublic>false</isPublic>
+                  <architecture>x86_64</architecture>
+                  <imageType>machine</imageType>
+                  <kernelId>aki-0b4aa462</kernelId>
+                  <name>logplex-ec3e8c94ece2a26b46c948bf02c1b787b7a43569</name>
+                  <rootDeviceType>ebs</rootDeviceType>
+                  <rootDeviceName>/dev/sda1</rootDeviceName>
+                  <blockDeviceMapping>
+                      <item>
+                          <deviceName>/dev/sda1</deviceName>
+                          <ebs>
+                              <snapshotId>snap-1b612e76</snapshotId>
+                              <volumeSize>15</volumeSize>
+                              <deleteOnTermination>true</deleteOnTermination>
+                          </ebs>
+                      </item>
+                  </blockDeviceMapping>
+                  <virtualizationType>paravirtual</virtualizationType>
+                  <tagSet>
+                      <item>
+                          <key>slot</key>
+                          <value>logplex</value>
+                      </item>
+                  </tagSet>
+              </item>
+              <item>
+                  <imageId>ami-2e06f647</imageId>
+                  <imageLocation>646412345678/logplex-12350a613f9a51cd1bc1d0a6d49a7e66a078ec64</imageLocation>
+                  <imageState>available</imageState>
+                  <imageOwnerId>646412345678</imageOwnerId>
+                  <isPublic>false</isPublic>
+                  <architecture>x86_64</architecture>
+                  <imageType>machine</imageType>
+                  <kernelId>aki-0b4aa462</kernelId>
+                  <name>logplex-12350a613f9a51cd1bc1d0a6d49a7e66a078ec64</name>
+                  <rootDeviceType>ebs</rootDeviceType>
+                  <rootDeviceName>/dev/sda1</rootDeviceName>
+                  <blockDeviceMapping>
+                      <item>
+                          <deviceName>/dev/sda1</deviceName>
+                          <ebs>
+                              <snapshotId>snap-7b291316</snapshotId>
+                              <volumeSize>15</volumeSize>
+                              <deleteOnTermination>true</deleteOnTermination>
+                          </ebs>
+                      </item>
+                  </blockDeviceMapping>
+                  <virtualizationType>paravirtual</virtualizationType>
+                  <tagSet>
+                      <item>
+                          <key>slot</key>
+                          <value>logplex</value>
+                      </item>
+                  </tagSet>
+              </item>
+          </imagesSet>
       </DescribeImagesResponse>
     http_version: "1.1"
