@@ -1,5 +1,6 @@
 module Stem
   module Family
+    include Util
     extend self
 
     def ami_for(family, release, architecture = "x86_64")
@@ -14,11 +15,11 @@ module Stem
       prev = Stem::Image::tagged(:family => family, :release => release)
       prev.each { |ami| Stem::Tag::destroy(ami, :release => release) }
     end
-    
+
     def member? family, ami
       desc = Stem::Image::describe(ami)
       throw "AMI #{ami} does not exist" if desc.nil?
-      tagset_to_hash(["tagSet"])["family"] == family
+      tagset_to_hash(desc["tagSet"])["family"] == family
     end
 
     def release family, release_name, *amis

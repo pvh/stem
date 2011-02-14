@@ -1,0 +1,119 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&ImageId=ami-0286766b&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      date: 
+      - Mon, 14 Feb 2011 05:45:35 GMT
+      server: 
+      - AmazonEC2
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>7f3c8bd5-13e0-440a-a726-d3288fcb12a2</requestId>
+          <imagesSet>
+              <item>
+                  <imageId>ami-0286766b</imageId>
+                  <imageLocation>646412345678/logplex-bd003cb96bb122203db388192f65f2c2b7a4c61d</imageLocation>
+                  <imageState>available</imageState>
+                  <imageOwnerId>646412345678</imageOwnerId>
+                  <isPublic>false</isPublic>
+                  <architecture>i386</architecture>
+                  <imageType>machine</imageType>
+                  <kernelId>aki-754aa41c</kernelId>
+                  <name>logplex-bd003cb96bb122203db388192f65f2c2b7a4c61d</name>
+                  <rootDeviceType>ebs</rootDeviceType>
+                  <rootDeviceName>/dev/sda1</rootDeviceName>
+                  <blockDeviceMapping>
+                      <item>
+                          <deviceName>/dev/sda1</deviceName>
+                          <ebs>
+                              <snapshotId>snap-a7622dca</snapshotId>
+                              <volumeSize>15</volumeSize>
+                              <deleteOnTermination>true</deleteOnTermination>
+                          </ebs>
+                      </item>
+                  </blockDeviceMapping>
+                  <virtualizationType>paravirtual</virtualizationType>
+                  <tagSet>
+                      <item>
+                          <key>family</key>
+                          <value>logplex</value>
+                      </item>
+                  </tagSet>
+              </item>
+          </imagesSet>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&ImageId=ami-0686766f&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      server: 
+      - AmazonEC2
+      date: 
+      - Mon, 14 Feb 2011 05:45:36 GMT
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>254ee6a5-083d-4e0e-8e0e-e78f3fb64c16</requestId>
+          <imagesSet>
+              <item>
+                  <imageId>ami-0686766f</imageId>
+                  <imageLocation>646412345678/logplex-ec3e8c94ece2a26b46c948bf02c1b787b7a43569</imageLocation>
+                  <imageState>available</imageState>
+                  <imageOwnerId>646412345678</imageOwnerId>
+                  <isPublic>false</isPublic>
+                  <architecture>x86_64</architecture>
+                  <imageType>machine</imageType>
+                  <kernelId>aki-0b4aa462</kernelId>
+                  <name>logplex-ec3e8c94ece2a26b46c948bf02c1b787b7a43569</name>
+                  <rootDeviceType>ebs</rootDeviceType>
+                  <rootDeviceName>/dev/sda1</rootDeviceName>
+                  <blockDeviceMapping>
+                      <item>
+                          <deviceName>/dev/sda1</deviceName>
+                          <ebs>
+                              <snapshotId>snap-1b612e76</snapshotId>
+                              <volumeSize>15</volumeSize>
+                              <deleteOnTermination>true</deleteOnTermination>
+                          </ebs>
+                      </item>
+                  </blockDeviceMapping>
+                  <virtualizationType>paravirtual</virtualizationType>
+                  <tagSet>
+                      <item>
+                          <key>family</key>
+                          <value>zergling</value>
+                      </item>
+                  </tagSet>
+              </item>
+          </imagesSet>
+      </DescribeImagesResponse>
+    http_version: "1.1"

@@ -43,15 +43,23 @@ describe Stem::Family do
     end
   end
 
-  describe "member" do
+  describe "member?" do
+    use_vcr_cassette
+
     it { should respond_to :member? }
+
     it "throws an exception for missing AMIs" do
       Stem::Image::should_receive(:describe).and_return(nil)
       lambda { Stem::Family::member?("postgres", "ami-BADAMI") }.should raise_error
     end
 
-    it "returns true for AMIs in a family"
-    it "returns false for AMIs not in a family"
+    it "returns true for AMIs in a family" do
+      Stem::Family.member?("logplex", "ami-0286766b").should be_true
+    end
+
+    it "returns false for AMIs not in a family" do
+      Stem::Family.member?("logplex", "ami-0686766f").should be_false
+    end
   end
 
   describe "release" do
