@@ -21,7 +21,7 @@ if ENV["VCR_RECORD"]
           "Timestamp" => "2002-10-28T04%3A16%3A00Z"
         }
         vars_to_strip.each do |k,v|
-          i.request.body.gsub!(/(#{k}=[^&$]+)(&|$)/, "#{k}=#{v}" + '\2')
+          i.request.body.gsub!(/(#{k}=[^&$]+)(&|$)/, "#{k}=#{v}\\2")
         end
       end
     end
