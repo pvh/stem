@@ -62,6 +62,41 @@ describe Stem::Family do
     end
   end
 
+  describe "members" do
+    use_vcr_cassette
+
+    it { should respond_to :members }
+
+    it "should call Stem::Image.tagged with the family tag" do
+      f = "postgres"
+      Stem::Image.should_receive(:tagged).with("family" => f).and_return([])
+      Stem::Family.members(f)
+    end
+
+    it "should return an empty array when no members exist" do
+      Stem::Image.should_receive(:tagged).and_return([])
+      Stem::Family.members("postgres-protoss").should == []
+    end
+
+    it "should return the AMI IDs when members exist" do
+      amis = [ "ami-00000001", "ami-00000002" ]
+      Stem::Image.should_receive(:tagged).and_return(amis)
+      Stem::Family.members("postgres").should == amis
+    end
+  end
+
+  describe "describe_members" do
+    use_vcr_cassette
+
+    it { should respond_to :describe_members }
+
+    it "should call Stem::Image.describe_tagged with the family tag" do
+      f = "postgres"
+      Stem::Image.should_receive(:describe_tagged).with("family" => f)
+      Stem::Family.describe_members(f)
+    end
+  end
+
   describe "release" do
     it { should respond_to :release }
 

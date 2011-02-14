@@ -68,7 +68,7 @@ describe Stem::Image do
       Stem::Image.describe_tagged("family" => "fake_family").should == []
     end
 
-    it "should return the AMI tags at the first level of the hash" do
+    it "should return the AMI tags at the first level of the image hash" do
       images = Stem::Image.describe_tagged("family" => "postgres")
       images.first["tags"].should include("family" => "postgres")
     end

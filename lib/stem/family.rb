@@ -22,6 +22,14 @@ module Stem
       tagset_to_hash(desc["tagSet"])["family"] == family
     end
 
+    def members family
+      Stem::Image.tagged("family" => family)
+    end
+
+    def describe_members family
+      Stem::Image.describe_tagged("family" => family)
+    end
+
     def release family, release_name, *amis
       amis.each do |ami|
         throw "#{ami} not part of #{family}" unless member?(family, ami)
