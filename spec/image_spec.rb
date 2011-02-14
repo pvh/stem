@@ -8,7 +8,7 @@ describe Stem::Image do
     it { should respond_to :tagged }
 
     it "should return an empty array when no images exist with the specified tags" do
-      Stem::Image.tagged(:faketag => 'does_not_exist')
+      Stem::Image.tagged(:faketag => 'does_not_exist').should == []
     end
 
   end

@@ -9,20 +9,27 @@ end
 if ENV["VCR_RECORD"]
   puts "******** VCR RECORDING **********"
 
-  blinkytime = Time.now
-  File.open("spec/fixtures/vcr_time", "w") { |f| f << Time.now.to_s }
-  Timecop.freeze(blinkytime)
-
   VCR.config do |c|
     c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
     c.stub_with :webmock
     c.default_cassette_options = { :match_requests_on => [:uri, :method, :body], :record => :new_episodes }
+    c.before_record do |i|
+      if i.request.uri =~ /ec2\.amazonaws\.com/
+        vars_to_strip = {
+          "AWSAccessKeyId" => "AKIAABCDEFGHIJKLMNOP",
+          "Signature" => "fakesignature",
+          "Timestamp" => "2002-10-28T04%3A16%3A00Z"
+        }
+        vars_to_strip.each do |k,v|
+          i.request.body.gsub!(/(#{k}=[^&$]+)(&|$)/, "#{k}=#{v}" + '\2')
+        end
+      end
+    end
   end
 else
   puts "******** VCR PLAYBACK **********"
 
-  blinkytime = Time.parse(File.read("spec/fixtures/vcr_time"))
-  Timecop.freeze(blinkytime)
+  Timecop.freeze(Time.parse("2002-10-28T04:16:00Z"))
 
   VCR.config do |c|
     c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
@@ -41,4 +48,21 @@ else
       }
     end
   end
+
+  # Stub out signature generation
+  Swirl::EC2.class_eval do
+    def compile_signature(method, body)
+      "fakesignature"
+    end
+  end
+
+  VCR::RequestMatcher.class_eval do
+    # VALID_MATCH_ATTRIBUTES = [:method, :uri, :host, :path, :headers, :body, :body_params]
+
+    def body
+      request.body if match_requests_on?(:body)
+    end
+
+  end
+
 end

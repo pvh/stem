@@ -3,7 +3,7 @@
   request: !ruby/struct:VCR::Request 
     method: :post
     uri: https://ec2.amazonaws.com:443/
-    body: AWSAccessKeyId=AKIAJCMZCYU5RS674NOQ&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T02%3A27%3A24Z&Version=2010-08-31&Signature=vy7XN%2FlM6C06Xzaqfz1SelhPKENsa8eEjsI5yjVIuAs%3D
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
     headers: 
       content-type: 
       - application/x-www-form-urlencoded
@@ -14,45 +14,16 @@
     headers: 
       content-type: 
       - text/xml;charset=UTF-8
-      date: 
-      - Fri, 11 Feb 2011 02:27:25 GMT
       server: 
       - AmazonEC2
+      date: 
+      - Mon, 14 Feb 2011 03:53:43 GMT
       transfer-encoding: 
       - chunked
     body: |-
       <?xml version="1.0" encoding="UTF-8"?>
       <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
-          <requestId>3310b583-03a4-4d4d-9258-72ec28de5bb4</requestId>
+          <requestId>881b384c-f0ed-4a68-b5d1-bd7eff1d1a38</requestId>
           <imagesSet/>
       </DescribeImagesResponse>
     http_version: "1.1"
-- !ruby/struct:VCR::HTTPInteraction 
-  request: !ruby/struct:VCR::Request 
-    method: :post
-    uri: https://ec2.amazonaws.com:443/
-    body: AWSAccessKeyId=AKIAJCMZCYU5RS674NOQ&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2011-02-11T02%3A28%3A57Z&Version=2010-08-31&Signature=f3EeVCT7ndew1K%2FcEqeeX73oc%2BYyXoCUbJX9%2FZ9IojM%3D
-    headers: 
-      content-type: 
-      - application/x-www-form-urlencoded
-  response: !ruby/struct:VCR::Response 
-    status: !ruby/struct:VCR::ResponseStatus 
-      code: 200
-      message: OK
-    headers: 
-      content-type: 
-      - text/xml;charset=UTF-8
-      date: 
-      - Fri, 11 Feb 2011 02:28:58 GMT
-      server: 
-      - AmazonEC2
-      transfer-encoding: 
-      - chunked
-    body: |-
-      <?xml version="1.0" encoding="UTF-8"?>
-      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
-          <requestId>68876b9b-91a7-423d-be53-30aad385000c</requestId>
-          <imagesSet/>
-      </DescribeImagesResponse>
-    http_version: "1.1"
-
