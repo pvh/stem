@@ -9,6 +9,11 @@ describe "tagset_to_hash" do
     tagset_to_hash(tagset).should == {"type" => "postgres9-server", "version" => "production"}
   end
 
+  it "returns a hash when there is only one tag" do
+    tagset = {"item" => {"key" => "type", "value" => "postgres9-server"}}
+    tagset_to_hash(tagset).should == {"type" => "postgres9-server"}
+  end
+
   it "returns nil for tags with no value" do
     tagset = {"item"=>[{"key" => "deprecated"}]}
     tagset_to_hash(tagset).should == {"deprecated" => nil}
