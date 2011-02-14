@@ -38,8 +38,18 @@ module Stem
       swirl.call("DescribeImages", opts)['imagesSet'].map {|image| image['imageId'] }
     end
 
+    def describe_tagged tags
+      opts = tags_to_filter(tags).merge("Owner" => "self")
+      images = swirl.call("DescribeImages", opts)["imagesSet"]
+      images.each {|image| image["tags"] = tagset_to_hash(image["tagSet"]) }
+      images
+    end
+
     def describe image
       swirl.call("DescribeImages", "ImageId" => image)["imagesSet"][0]
+    rescue Swirl::InvalidRequest => e
+      raise e unless e.message =~ /does not exist/
+      nil
     end
   end
 end

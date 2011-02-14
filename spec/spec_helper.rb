@@ -56,13 +56,4 @@ else
     end
   end
 
-  VCR::RequestMatcher.class_eval do
-    # VALID_MATCH_ATTRIBUTES = [:method, :uri, :host, :path, :headers, :body, :body_params]
-
-    def body
-      request.body if match_requests_on?(:body)
-    end
-
-  end
-
 end

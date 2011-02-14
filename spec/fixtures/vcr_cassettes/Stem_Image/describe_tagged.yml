@@ -1,0 +1,92 @@
+--- 
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&Filter.0.Name=tag%3Afamily&Filter.0.Value.0=fake_family&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      date: 
+      - Mon, 14 Feb 2011 19:14:10 GMT
+      server: 
+      - AmazonEC2
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>f9e7b7b8-ffd2-4521-b91a-5e90cbefca38</requestId>
+          <imagesSet/>
+      </DescribeImagesResponse>
+    http_version: "1.1"
+- !ruby/struct:VCR::HTTPInteraction 
+  request: !ruby/struct:VCR::Request 
+    method: :post
+    uri: https://ec2.amazonaws.com:443/
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&Filter.0.Name=tag%3Afamily&Filter.0.Value.0=postgres&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    headers: 
+      content-type: 
+      - application/x-www-form-urlencoded
+  response: !ruby/struct:VCR::Response 
+    status: !ruby/struct:VCR::ResponseStatus 
+      code: 200
+      message: OK
+    headers: 
+      content-type: 
+      - text/xml;charset=UTF-8
+      server: 
+      - AmazonEC2
+      date: 
+      - Mon, 14 Feb 2011 19:14:10 GMT
+      transfer-encoding: 
+      - chunked
+    body: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
+          <requestId>c23cf86c-eb5a-4281-bfa7-115d883669bd</requestId>
+          <imagesSet>
+              <item>
+                  <imageId>ami-e67a8a8f</imageId>
+                  <imageLocation>646412345678/routing_transient_redis-57e6055179710692885fc12fa0025da14ca1ca04</imageLocation>
+                  <imageState>available</imageState>
+                  <imageOwnerId>646412345678</imageOwnerId>
+                  <isPublic>false</isPublic>
+                  <architecture>x86_64</architecture>
+                  <imageType>machine</imageType>
+                  <kernelId>aki-0b4aa462</kernelId>
+                  <name>routing_transient_redis-57e6055179710692885fc12fa0025da14ca1ca04</name>
+                  <rootDeviceType>ebs</rootDeviceType>
+                  <rootDeviceName>/dev/sda1</rootDeviceName>
+                  <blockDeviceMapping>
+                      <item>
+                          <deviceName>/dev/sda1</deviceName>
+                          <ebs>
+                              <snapshotId>snap-2b2a2946</snapshotId>
+                              <volumeSize>15</volumeSize>
+                              <deleteOnTermination>true</deleteOnTermination>
+                          </ebs>
+                      </item>
+                  </blockDeviceMapping>
+                  <virtualizationType>paravirtual</virtualizationType>
+                  <tagSet>
+                      <item>
+                          <key>family</key>
+                          <value>postgres</value>
+                      </item>
+                      <item>
+                          <key>release</key>
+                          <value>production</value>
+                      </item>
+                  </tagSet>
+              </item>
+          </imagesSet>
+      </DescribeImagesResponse>
+    http_version: "1.1"
