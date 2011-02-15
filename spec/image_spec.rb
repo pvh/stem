@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Stem::Image do
 
   context "create" do
-
     it { should respond_to :create }
 
     it "should raise an exception when an image with that name already exists" do

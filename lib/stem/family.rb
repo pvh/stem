@@ -94,17 +94,15 @@ module Stem
         begin
           state = Stem::Image.describe(image_id)["imageState"]
           log.call "Image #{image_id} #{state}"
-          if state == "available"
-            log.call "Image capturing succeeded"
+          case state
+          when "available"
+            log.call("Image capturing succeeded")
             break
-          elsif state == "pending"
-            # continue
-          elsif state == "terminated"
+          when "pending" #continue
+          when "terminated"
             log "Image capture failed (#{image_id})"
             return false
-          else
-            throw "Image unexpectedly entered #{state}"
-          end
+          else throw "Image unexpectedly entered #{state}"
         rescue Swirl::InvalidRequest => e
           raise unless e.message =~ /does not exist/
         end
