@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Stem::Image do
 
   context "create" do
-    use_vcr_cassette
 
     it { should respond_to :create }
 
