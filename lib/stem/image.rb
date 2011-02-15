@@ -3,8 +3,7 @@ module Stem
     include Util
     extend self
 
-    def create name, instance, tags
-      raise "You already have an image named '#{name}'" if named(name)
+    def create name, instance, tags = {}
       image_id = swirl.call("CreateImage", "Name" => name, "InstanceId" => instance)["imageId"]
       unless tags.empty?
         # We'll retry this once if necessary due to consistency issues on the AWS side

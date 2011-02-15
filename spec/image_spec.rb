@@ -2,6 +2,50 @@ require 'spec_helper'
 
 describe Stem::Image do
 
+  context "create" do
+    use_vcr_cassette
+
+    it { should respond_to :create }
+
+    it "should raise an exception when an image with that name already exists" do
+      image_name = "boring_old_ami"
+      swirl.should_receive(:call) do
+        raise Swirl::InvalidRequest.new("AMI name #{image_name} is already in use by AMI ami-12341234")
+      end
+      lambda { Stem::Image.create(image_name, "ami-12345678") }.
+        should raise_exception
+    end
+
+    it "should call swirl with the correct arguments" do
+      name, source_ami = "new_image", "ami-12345678"
+      Stem::Image.swirl.should_receive(:call).at_least(:once).
+        with("CreateImage", {
+          "Name" => name,
+          "InstanceId" => source_ami
+        }).and_return("imageId" => nil)
+      Stem::Image.create(name, source_ami)
+    end
+
+    it "should not tag the image when no tags are passed in" do
+      Stem::Tag.should_not_receive(:create)
+      swirl.should_receive(:call).and_return("imageId" => nil)
+      Stem::Image.create("new_image", "ami-12345678")
+    end
+
+    it "should tag the image when tags are passed in" do
+      ami_id, tags = "ami-12345678", {"family" => "postgres"}
+      Stem::Tag.should_receive(:create).with(ami_id, tags)
+      swirl.should_receive(:call).and_return("imageId" => ami_id)
+      Stem::Image.create("new_image", ami_id, tags)
+    end
+
+    it "should return the ami id" do
+      output_ami = "ami-22222222"
+      swirl.should_receive(:call).and_return("imageId" => output_ami)
+      Stem::Image.create("new_image", "ami-11111111").should == output_ami
+    end
+  end
+
   context "describe" do
     use_vcr_cassette
 
@@ -72,6 +116,10 @@ describe Stem::Image do
       images = Stem::Image.describe_tagged("family" => "postgres")
       images.first["tags"].should include("family" => "postgres")
     end
+  end
+
+  def swirl
+    Stem::Image.swirl
   end
 end
 
