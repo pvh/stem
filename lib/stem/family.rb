@@ -11,9 +11,9 @@ module Stem
       amis[0]
     end
 
-    def unrelease family, release
-      prev = Stem::Image::tagged(:family => family, :release => release)
-      prev.each { |ami| Stem::Tag::destroy(ami, :release => release) }
+    def unrelease family, release_name
+      prev = Stem::Image::tagged(:family => family, :release => release_name)
+      prev.each { |ami| Stem::Tag::destroy(ami, :release => release_name) }
     end
 
     def member? family, ami
@@ -48,7 +48,7 @@ module Stem
 
       unless ami_opts.delete('force')
         # Check if image already exists w/ same SHA1 (source AMI + userdata)
-        amis = Stem::Image.named("#{family}-#{sha1}")
+        amis = Stem::Image.tagged(:family => family, :sha1 => sha1)
         if amis
           log "Image in family #{family} with SHA1 #{sha1} has already been built (#{amis.last})."
           return false
@@ -62,11 +62,13 @@ module Stem
       log.call "Booting #{instance_id} to produce your prototype instance"
       wait_for_stopped instance_id, log
 
-      image_id = Stem::Image.create("#{family}-#{sha1}",
+      timestamp = Time.now.utc.iso8601
+      image_id = Stem::Image.create("#{family}-#{timestamp}",
                                     instance_id,
                                     {
-                                      :created => Time.now.utc.iso8601,
+                                      :created => timestamp,
                                       :family => family,
+                                      :sha1 => sha1,
                                       :source_ami => config["ami"]
                                     })
       log.call "Image ID is #{image_id}"
@@ -102,7 +104,8 @@ module Stem
           when "terminated"
             log "Image capture failed (#{image_id})"
             return false
-          else throw "Image unexpectedly entered #{state}"
+          else throw "Image unexpectedly entered #{state}";
+          end
         rescue Swirl::InvalidRequest => e
           raise unless e.message =~ /does not exist/
         end

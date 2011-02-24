@@ -31,14 +31,25 @@ describe Stem::Family do
 
   describe "unrelease" do
     it { should respond_to :unrelease}
+
     it "can unrelease nothing" do
       Stem::Image::should_receive(:tagged).and_return([])
       Stem::Family::unrelease("postgres", "dummy")
     end
 
+    it "should look up released images using tags" do
+      Stem::Image.should_receive(:tagged).with({
+        :family => 'postgres',
+        :release => 'production'
+      }).and_return([])
+      Stem::Family.unrelease("postgres", "production")
+    end
+
     it "can unrelease the previous release" do
-      Stem::Image::should_receive(:tagged).and_return(["ami-F00D", "ami-BEEF"])
-      Stem::Tag::should_receive(:destroy).twice.with(/ami-.+/, {:release => "production"})
+      amis = ["ami-F00D", "ami-BEEF"]
+      Stem::Image::should_receive(:tagged).and_return(amis)
+      Stem::Tag::should_receive(:destroy).ordered.with(amis[0], :release => "production")
+      Stem::Tag::should_receive(:destroy).ordered.with(amis[1], :release => "production")
       Stem::Family::unrelease("postgres", "production")
     end
   end
@@ -120,9 +131,26 @@ describe Stem::Family do
         Stem::Family::release("postgres", "production", "ami-XXXXXX")
       end
 
+      it "should tag a new release for 2 AMIs" do
+        amis = ["ami-XXXXX1", "ami-XXXXX2"]
+        Stem::Tag.should_receive(:create).with(
+          amis[0],
+          :release => 'production'
+        ).ordered.and_return('true')
+        Stem::Tag.should_receive(:create).with(
+          amis[1],
+          :release => 'production'
+        ).ordered.and_return('true')
+        Stem::Family::release("postgres", "production", *amis)
+      end
+
       it "should become the release for a version"
     end
 
+  end
+
+  describe "build_image" do
+    it { should respond_to :build_image }
   end
 end
 
