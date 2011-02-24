@@ -60,6 +60,16 @@ module Stem
       swirl.call "AuthorizeSecurityGroupIngress", args
     end
 
+    def revoke(name, rules)
+      index = 0
+      args = rules.inject({"GroupName" => name}) do |i,rule|
+          index += 1;
+          rule_hash = gen_authorize(index, rule)
+          i.merge(rule_hash)
+      end
+      swirl.call "RevokeSecurityGroupIngress", args
+    end
+
     def gen_authorize_target(index, target)
       if target =~ /^\d+\.\d+\.\d+.\d+\/\d+$/
         { "IpPermissions.#{index}.IpRanges.1.CidrIp"  => target }
