@@ -9,8 +9,8 @@ $spec = Gem::Specification.new do |s|
   s.description = "minimalist EC2 instance management"
   s.summary     = "an EC2 instance management library designed to get out of your way and give you instances"
 
-  s.authors = ["Peter van Hardenberg", "Orion Henry"]
-  s.email = ["pvh@heroku.com", "orion@heroku.com"]
+  s.authors = ["Peter van Hardenberg", "Orion Henry", "Blake Gentry"]
+  s.email = ["pvh@heroku.com", "orion@heroku.com", "b@heroku.com"]
 
   # = MANIFEST =
   s.files = %w[LICENSE README.md] + Dir["lib/**/*.rb"]
