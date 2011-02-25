@@ -22,17 +22,16 @@ module Stem
         nil
     end
 
-    def create(name, rules = nil)
-        create!(name, rules)
+    def create(name, rules = nil, description = "")
+        create!(name, rules, description)
         true
       rescue Swirl::InvalidRequest => e
         raise e unless e.message =~ /The security group '\S+' already exists/
         false
     end
 
-    def create!(name, rules = nil)
-      description = {}
-      swirl.call "CreateSecurityGroup",  "GroupName" => name, "GroupDescription" => "%%" + description.to_json
+    def create!(name, rules = nil, description = "")
+      swirl.call "CreateSecurityGroup",  "GroupName" => name, "GroupDescription" => description
       auth(name, rules) if rules
     end
 
