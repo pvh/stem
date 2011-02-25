@@ -58,15 +58,15 @@ describe Stem::Util do
     end
   end
 
-  describe "aggregate_hash_options_for_ami" do
+  describe "aggregate_hash_options_for_ami!" do
     it "shouldn't alter the hash if 'ami' is in the config hash" do
       config = {'ami' => 'ami-STOUT1'}
-      aggregate_hash_options_for_ami(config).should == config
+      aggregate_hash_options_for_ami!(config).should == config
     end
 
     it "should raise an exception if no valid ami options are in the input" do
       lambda do
-        aggregate_hash_options_for_ami({})
+        aggregate_hash_options_for_ami!({})
       end.should raise_exception
     end
 
@@ -79,21 +79,21 @@ describe Stem::Util do
 
       it "should look up the ami by name if 'ami-name' is in the input hash" do
         Stem::Image.should_receive(:named).and_return(@ami_id)
-        aggregate_hash_options_for_ami(@config)
+        aggregate_hash_options_for_ami!(@config)
       end
 
        it "should not include 'ami-name' in the result" do
-        aggregate_hash_options_for_ami(@config).keys.should_not include('ami-name')
+        aggregate_hash_options_for_ami!(@config).keys.should_not include('ami-name')
       end
 
       it "should include the ami in the result" do
-        aggregate_hash_options_for_ami(@config)['ami'].should == @ami_id
+        aggregate_hash_options_for_ami!(@config)['ami'].should == @ami_id
       end
 
       it "should raise an exception if no ami matches the name" do
         Stem::Image.should_receive(:named).and_return(nil)
         lambda do
-          aggregate_hash_options_for_ami(@config)
+          aggregate_hash_options_for_ami!(@config)
         end.should raise_exception
       end
     end
@@ -107,21 +107,21 @@ describe Stem::Util do
 
       it "should look up the ami by name if 'ami-tags' is in the input hash" do
         Stem::Image.should_receive(:tagged).and_return([@ami_id])
-        aggregate_hash_options_for_ami(@config)
+        aggregate_hash_options_for_ami!(@config)
       end
 
       it "should not include 'ami-tags' in the result" do
-        aggregate_hash_options_for_ami(@config).keys.should_not include('ami-name')
+        aggregate_hash_options_for_ami!(@config).keys.should_not include('ami-name')
       end
 
       it "shuld include the ami in the result" do
-        aggregate_hash_options_for_ami(@config)['ami'].should == @ami_id
+        aggregate_hash_options_for_ami!(@config)['ami'].should == @ami_id
       end
 
       it "should raise an exception if no ami matches the tags" do
         Stem::Image.should_receive(:tagged).and_return([])
         lambda do
-          aggregate_hash_options_for_ami(@config)
+          aggregate_hash_options_for_ami!(@config)
         end.should raise_exception
       end
     end

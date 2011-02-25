@@ -43,17 +43,8 @@ module Stem
         puts "[#{family}|#{Time.now.to_s}] #{msg}"
       }
 
-      config = aggregate_hash_options_for_ami(config)
-      sha1 = Digest::SHA1::hexdigest( userdata + config.to_s )
-
-      unless ami_opts.delete('force')
-        # Check if image already exists w/ same SHA1 (source AMI + userdata)
-        amis = Stem::Image.tagged(:family => family, :sha1 => sha1)
-        if amis
-          log "Image in family #{family} with SHA1 #{sha1} has already been built (#{amis.last})."
-          return false
-        end
-      end
+      aggregate_hash_options_for_ami!(config)
+      sha1 = image_hash(config, userdata)
 
       log.call "Beginning to build image for #{family}"
       log.call "Config:\n------\n#{ config.inspect }\n-------"
@@ -77,6 +68,16 @@ module Stem
 
       log "Terminating #{instance_id} now that the image is captured"
       Stem::Instance::destroy(instance_id)
+    end
+
+    def image_already_built?(family, config, userdata)
+      aggregate_hash_options_for_ami!(config)
+      sha1 = image_hash(config, userdata)
+      !Stem::Image.tagged(:family => family, :sha1 => sha1).empty?
+    end
+
+    def image_hash(config, userdata)
+      Digest::SHA1::hexdigest([config.to_s, userdata].join(' '))
     end
 
     protected

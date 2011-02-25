@@ -152,6 +152,50 @@ describe Stem::Family do
   describe "build_image" do
     it { should respond_to :build_image }
   end
+
+  describe "image_hash" do
+    it { should respond_to :image_hash }
+
+    it "should return the SHA1 hash of the config.to_s and userdata joined by a space" do
+      sha1 = Digest::SHA1.hexdigest("config userdata")
+      Stem::Family.image_hash("config", "userdata").should == sha1
+    end
+  end
+
+  describe "image_already_built?" do
+    before do
+      @family = "great_beers"
+      @config =   {
+        "arch" => "32",
+        "ami" => "ami-714ba518",
+        "instance_type" => "c1.medium"
+      }
+      @userdata = "echo 'some useful script'"
+      @sha1 ||= Stem::Family.image_hash(@config, @userdata)
+      @ami_id = "ami-STOUT2"
+      Stem::Image.stub!(:tagged).and_return([@ami_id])
+    end
+
+    it { should respond_to :image_already_built? }
+
+    it "should look for images tagged with the family and sha1" do
+      Stem::Image.should_receive(:tagged).with({
+        :family => @family,
+        :sha1 => @sha1
+      }).and_return([])
+      Stem::Family.image_already_built?(@family, @config, @userdata)
+    end
+
+    it "should return true if an image with the given family and sha1 exists" do
+      Stem::Image.stub!(:tagged).and_return([@ami_id])
+      Stem::Family.image_already_built?(@family, @config, @userdata).should == true
+    end
+
+    it "should return false if there's no image with the given family and sha1" do
+      Stem::Image.stub!(:tagged).and_return([])
+      Stem::Family.image_already_built?(@family, @config, @userdata).should == false
+    end
+  end
 end
 
 # tags

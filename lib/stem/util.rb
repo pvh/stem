@@ -73,7 +73,7 @@ module Stem
       end
     end
 
-    def aggregate_hash_options_for_ami(config)
+    def aggregate_hash_options_for_ami!(config)
       if config["ami"]
         return config
       elsif config["ami-name"]

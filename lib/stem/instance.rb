@@ -5,7 +5,7 @@ module Stem
 
     def launch config, userdata = nil
       throw "No config provided" unless config
-      config = aggregate_hash_options_for_ami(config)
+      config = aggregate_hash_options_for_ami!(config)
       ami = config["ami"]
 
       opt = {
