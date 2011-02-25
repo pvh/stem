@@ -62,7 +62,7 @@ module Stem
     def gen_authorize_target(index, target)
       if target =~ /^\d+\.\d+\.\d+.\d+\/\d+$/
         { "IpPermissions.#{index}.IpRanges.1.CidrIp"  => target }
-      elsif target =~ /^(\w+)@(\w+)$/
+      elsif target =~ /^(.+)@(\w+)$/
         { "IpPermissions.#{index}.Groups.1.GroupName" => $1,
           "IpPermissions.#{index}.Groups.1.UserId"    => $2 }
       elsif target =~ /^@(\w+)$/
