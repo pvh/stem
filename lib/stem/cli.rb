@@ -20,6 +20,7 @@ module Stem
         opts.separator "  $ stem launch examples/lxc-server/lxc-server.json examples/lxc-server/"
         opts.separator "  $ stem list"
         opts.separator "  $ stem create ami-name instance-id ami_tag1,ami_tag2"
+        opts.separator "  $ stem destroy ami-name"
 
         opts.separator " "
         opts.separator "Options:"
