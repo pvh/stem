@@ -18,7 +18,7 @@ $spec = Gem::Specification.new do |s|
   s.executables = ["stem"]
 
   # = MANIFEST =
-  s.add_dependency 'swirl',    '= 1.5.2'
+  s.add_dependency 'swirl',    '= 1.6.2'
   s.homepage = "http://github.com/pvh/stem"
   s.require_paths = %w[lib]
 end
