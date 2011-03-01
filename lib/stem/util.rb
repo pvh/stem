@@ -5,10 +5,10 @@ module Stem
     end
 
     def tagset_to_hash(tagset)
-      if tagset["item"].is_a?(Hash)
+      if tagset.is_a?(Hash)
         {tagset["item"]["key"] => tagset["item"]["value"]}
       else
-        tagset["item"].inject({}) do |h,item|
+        tagset.inject({}) do |h,item|
           k, v = item["key"], item["value"]
           h[k] = v
           h

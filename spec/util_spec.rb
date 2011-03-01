@@ -5,19 +5,20 @@ describe Stem::Util do
 
   describe "tagset_to_hash" do
     it "returns a hash when fed a stupid tagset" do
-      tagset = {"item"=>[
+      tagset = [
         {"value"=>"postgres9-server", "key"=>"type"},
-        {"value"=>"production", "key"=>"version"}]}
+        {"value"=>"production", "key"=>"version"}
+      ]
       tagset_to_hash(tagset).should == {"type" => "postgres9-server", "version" => "production"}
     end
 
     it "returns a hash when there is only one tag" do
-      tagset = {"item" => {"key" => "type", "value" => "postgres9-server"}}
+      tagset = [{"key" => "type", "value" => "postgres9-server"}]
       tagset_to_hash(tagset).should == {"type" => "postgres9-server"}
     end
 
     it "returns nil for tags with no value" do
-      tagset = {"item"=>[{"key" => "deprecated"}]}
+      tagset = [{"key" => "deprecated"}]
       tagset_to_hash(tagset).should == {"deprecated" => nil}
     end
   end

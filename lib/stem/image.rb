@@ -34,14 +34,19 @@ module Stem
     def tagged tags
       return if tags.empty?
       opts = tags_to_filter(tags).merge("Owner" => "self")
-      swirl.call("DescribeImages", opts)['imagesSet'].map {|image| image['imageId'] }
+      res = swirl.call("DescribeImages", opts)['imagesSet']
+      res ? res.map {|image| image['imageId'] } : []
     end
 
     def describe_tagged tags
       opts = tags_to_filter(tags).merge("Owner" => "self")
       images = swirl.call("DescribeImages", opts)["imagesSet"]
-      images.each {|image| image["tags"] = tagset_to_hash(image["tagSet"]) }
-      images
+      if images
+        images.each {|image| image["tags"] = tagset_to_hash(image["tagSet"]) }
+        images
+      else
+        []
+      end
     end
 
     def describe image

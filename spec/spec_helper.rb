@@ -50,7 +50,7 @@ else
   end
 
   # Stub out signature generation
-  Swirl::EC2.class_eval do
+  Swirl::AWS.class_eval do
     def compile_signature(method, body)
       "fakesignature"
     end
