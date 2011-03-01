@@ -1,7 +1,6 @@
-require 'sha1'
-
 module Stem
   module Family
+    include Util
     extend self
 
     def ami_for(family, release, architecture = "x86_64")
@@ -12,17 +11,25 @@ module Stem
       amis[0]
     end
 
-    def unrelease family, release
-      prev = Stem::Image::tagged(:family => family, :release => release)
-      prev.each { |ami| Stem::Tag::destroy(ami, :release => release) }
+    def unrelease family, release_name
+      prev = Stem::Image::tagged(:family => family, :release => release_name)
+      prev.each { |ami| Stem::Tag::destroy(ami, :release => release_name) }
     end
-    
+
     def member? family, ami
       desc = Stem::Image::describe(ami)
       throw "AMI #{ami} does not exist" if desc.nil?
-      tagset_to_hash(["tagSet"])["family"] == family
+      tagset_to_hash(desc["tagSet"])["family"] == family
     end
-    
+
+    def members family
+      Stem::Image.tagged("family" => family)
+    end
+
+    def describe_members family
+      Stem::Image.describe_tagged("family" => family)
+    end
+
     def release family, release_name, *amis
       amis.each do |ami|
         throw "#{ami} not part of #{family}" unless member?(family, ami)
@@ -36,6 +43,9 @@ module Stem
         puts "[#{family}|#{Time.now.to_s}] #{msg}"
       }
 
+      aggregate_hash_options_for_ami!(config)
+      sha1 = image_hash(config, userdata)
+
       log.call "Beginning to build image for #{family}"
       log.call "Config:\n------\n#{ config.inspect }\n-------"
       instance_id = Stem::Instance.launch(config, userdata)
@@ -43,19 +53,31 @@ module Stem
       log.call "Booting #{instance_id} to produce your prototype instance"
       wait_for_stopped instance_id, log
 
-      build_hash = SHA1::hexdigest( userdata + config.to_s )
-      image_id = Stem::Image.create("#{family}-#{build_hash}",
+      timestamp = Time.now.utc.iso8601
+      image_id = Stem::Image.create("#{family}-#{timestamp}",
                                     instance_id,
                                     {
+                                      :created => timestamp,
                                       :family => family,
-                                      :created => Time.now.utc.iso8601
+                                      :sha1 => sha1,
+                                      :source_ami => config["ami"]
                                     })
       log.call "Image ID is #{image_id}"
 
       wait_for_available(image_id, log)
 
       log "Terminating #{instance_id} now that the image is captured"
-      Stem::Instance::terminate(instance_id)
+      Stem::Instance::destroy(instance_id)
+    end
+
+    def image_already_built?(family, config, userdata)
+      aggregate_hash_options_for_ami!(config)
+      sha1 = image_hash(config, userdata)
+      !Stem::Image.tagged(:family => family, :sha1 => sha1).empty?
+    end
+
+    def image_hash(config, userdata)
+      Digest::SHA1::hexdigest([config.to_s, userdata].join(' '))
     end
 
     protected
@@ -70,18 +92,20 @@ module Stem
     end
 
     def wait_for_available(image_id, log)
-      log.call "waiting for image to finish capturing..."
+      log.call "Waiting for image to finish capturing..."
       while sleep 10
         begin
           state = Stem::Image.describe(image_id)["imageState"]
-          log.call "image #{image_id} #{state}"
-          if state == "available"
-            log.call "image capturing succeeded"
+          log.call "Image #{image_id} #{state}"
+          case state
+          when "available"
+            log.call("Image capturing succeeded")
             break
-          elsif state == "pending"
-            # continue
-          else
-            throw "image unexpectedly entered #{state}"
+          when "pending" #continue
+          when "terminated"
+            log "Image capture failed (#{image_id})"
+            return false
+          else throw "Image unexpectedly entered #{state}";
           end
         rescue Swirl::InvalidRequest => e
           raise unless e.message =~ /does not exist/

@@ -1,39 +1,18 @@
 module Stem
   module Util
     def swirl
-      account = "default"
-      etc = "#{ENV["HOME"]}/.swirl"
-      config = \
-      if ENV["AWS_ACCESS_KEY_ID"] && ENV["AWS_SECRET_ACCESS_KEY"]
-        {
-          :aws_access_key_id => ENV["AWS_ACCESS_KEY_ID"],
-          :aws_secret_access_key => ENV["AWS_SECRET_ACCESS_KEY"],
-          :version => "2010-08-31"
-        }
-      else
-        account = account.to_sym
-
-        if File.exists?(etc)
-          data = YAML.load_file(etc)
-        else
-          abort("I was expecting to find a .swirl file in your home directory.")
-        end
-
-        if data.key?(account)
-          data[account]
-        else
-          abort("I don't see the account you're looking for")
-        end
-      end
-
-      @swirl = Swirl::EC2.new config
+      @swirl ||= Swirl::EC2.new load_config
     end
 
     def tagset_to_hash(tagset)
-      tagset["item"].inject({}) do |h,item|
-        k, v = item["key"], item["value"]
-        h[k] = v
-        h
+      if tagset.is_a?(Hash)
+        {tagset["item"]["key"] => tagset["item"]["value"]}
+      else
+        tagset.inject({}) do |h,item|
+          k, v = item["key"], item["value"]
+          h[k] = v
+          h
+        end
       end
     end
 
@@ -65,6 +44,52 @@ module Stem
       end
       opts
     end
+
+    private
+
+    def load_config
+      account = "default"
+      etc = "#{ENV["HOME"]}/.swirl"
+      if ENV["AWS_ACCESS_KEY_ID"] && ENV["AWS_SECRET_ACCESS_KEY"]
+        {
+          :aws_access_key_id => ENV["AWS_ACCESS_KEY_ID"],
+          :aws_secret_access_key => ENV["AWS_SECRET_ACCESS_KEY"],
+          :version => "2010-08-31"
+        }
+      else
+        account = account.to_sym
+
+        if File.exists?(etc)
+          data = YAML.load_file(etc)
+        else
+          abort("I was expecting to find a .swirl file in your home directory.")
+        end
+
+        if data.key?(account)
+          data[account]
+        else
+          abort("I don't see the account you're looking for")
+        end
+      end
+    end
+
+    def aggregate_hash_options_for_ami!(config)
+      if config["ami"]
+        return config
+      elsif config["ami-name"]
+        name = config.delete("ami-name")
+        config["ami"] = Image::named(name)
+        throw "AMI named #{name} was not found. (Does it need creating?)" unless config["ami"]
+      elsif config["ami-tags"]
+        tags = config.delete('ami-tags')
+        config["ami"] = Image::tagged(tags)[0]
+        throw "AMI tagged with #{tags.inspect} was not found. (Does it need creating?)" unless config["ami"]
+      else
+        throw "No AMI specified."
+      end
+      config
+    end
+
   end
 end
 

@@ -22,17 +22,16 @@ module Stem
         nil
     end
 
-    def create(name, rules = nil)
-        create!(name, rules)
+    def create(name, rules = nil, description = "")
+        create!(name, rules, description)
         true
       rescue Swirl::InvalidRequest => e
         raise e unless e.message =~ /The security group '\S+' already exists/
         false
     end
 
-    def create!(name, rules = nil)
-      description = {}
-      swirl.call "CreateSecurityGroup",  "GroupName" => name, "GroupDescription" => "%%" + description.to_json
+    def create!(name, rules = nil, description = "")
+      swirl.call "CreateSecurityGroup",  "GroupName" => name, "GroupDescription" => description
       auth(name, rules) if rules
     end
 
@@ -73,7 +72,7 @@ module Stem
     def gen_authorize_target(index, target)
       if target =~ /^\d+\.\d+\.\d+.\d+\/\d+$/
         { "IpPermissions.#{index}.IpRanges.1.CidrIp"  => target }
-      elsif target =~ /^(\w+)@(\w+)$/
+      elsif target =~ /^(.+)@(\w+)$/
         { "IpPermissions.#{index}.Groups.1.GroupName" => $1,
           "IpPermissions.#{index}.Groups.1.UserId"    => $2 }
       elsif target =~ /^@(\w+)$/

@@ -3,8 +3,7 @@ module Stem
     include Util
     extend self
 
-    def create name, instance, tags
-      raise "You already have an image named '#{name}'" if named(name)
+    def create name, instance, tags = {}
       image_id = swirl.call("CreateImage", "Name" => name, "InstanceId" => instance)["imageId"]
       unless tags.empty?
         # We'll retry this once if necessary due to consistency issues on the AWS side
@@ -35,11 +34,26 @@ module Stem
     def tagged tags
       return if tags.empty?
       opts = tags_to_filter(tags).merge("Owner" => "self")
-      swirl.call("DescribeImages", opts)['imagesSet'].map {|image| image['imageId'] }
+      res = swirl.call("DescribeImages", opts)['imagesSet']
+      res ? res.map {|image| image['imageId'] } : []
+    end
+
+    def describe_tagged tags
+      opts = tags_to_filter(tags).merge("Owner" => "self")
+      images = swirl.call("DescribeImages", opts)["imagesSet"]
+      if images
+        images.each {|image| image["tags"] = tagset_to_hash(image["tagSet"]) }
+        images
+      else
+        []
+      end
     end
 
     def describe image
       swirl.call("DescribeImages", "ImageId" => image)["imagesSet"][0]
+    rescue Swirl::InvalidRequest => e
+      raise e unless e.message =~ /does not exist/
+      nil
     end
   end
 end

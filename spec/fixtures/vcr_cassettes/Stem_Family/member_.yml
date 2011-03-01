@@ -3,7 +3,7 @@
   request: !ruby/struct:VCR::Request 
     method: :post
     uri: https://ec2.amazonaws.com:443/
-    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&Filter.0.Name=tag%3Afaketag&Filter.0.Value.0=does_not_exist&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&ImageId=ami-0286766b&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
     headers: 
       content-type: 
       - application/x-www-form-urlencoded
@@ -15,7 +15,7 @@
       content-type: 
       - text/xml;charset=UTF-8
       date: 
-      - Mon, 14 Feb 2011 05:06:50 GMT
+      - Mon, 14 Feb 2011 05:45:35 GMT
       server: 
       - AmazonEC2
       transfer-encoding: 
@@ -23,15 +23,46 @@
     body: |-
       <?xml version="1.0" encoding="UTF-8"?>
       <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
-          <requestId>d43ded72-3669-4a7f-b6a3-d48732ae3284</requestId>
-          <imagesSet/>
+          <requestId>7f3c8bd5-13e0-440a-a726-d3288fcb12a2</requestId>
+          <imagesSet>
+              <item>
+                  <imageId>ami-0286766b</imageId>
+                  <imageLocation>646412345678/logplex-bd003cb96bb122203db388192f65f2c2b7a4c61d</imageLocation>
+                  <imageState>available</imageState>
+                  <imageOwnerId>646412345678</imageOwnerId>
+                  <isPublic>false</isPublic>
+                  <architecture>i386</architecture>
+                  <imageType>machine</imageType>
+                  <kernelId>aki-754aa41c</kernelId>
+                  <name>logplex-bd003cb96bb122203db388192f65f2c2b7a4c61d</name>
+                  <rootDeviceType>ebs</rootDeviceType>
+                  <rootDeviceName>/dev/sda1</rootDeviceName>
+                  <blockDeviceMapping>
+                      <item>
+                          <deviceName>/dev/sda1</deviceName>
+                          <ebs>
+                              <snapshotId>snap-a7622dca</snapshotId>
+                              <volumeSize>15</volumeSize>
+                              <deleteOnTermination>true</deleteOnTermination>
+                          </ebs>
+                      </item>
+                  </blockDeviceMapping>
+                  <virtualizationType>paravirtual</virtualizationType>
+                  <tagSet>
+                      <item>
+                          <key>family</key>
+                          <value>logplex</value>
+                      </item>
+                  </tagSet>
+              </item>
+          </imagesSet>
       </DescribeImagesResponse>
     http_version: "1.1"
 - !ruby/struct:VCR::HTTPInteraction 
   request: !ruby/struct:VCR::Request 
     method: :post
     uri: https://ec2.amazonaws.com:443/
-    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&Filter.0.Name=architecture&Filter.0.Value.0=x86_64&Filter.1.Name=tag%3Aslot&Filter.1.Value.0=logplex&Owner=self&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
+    body: AWSAccessKeyId=AKIAABCDEFGHIJKLMNOP&Action=DescribeImages&ImageId=ami-0686766f&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=2002-10-28T04%3A16%3A00Z&Version=2010-08-31&Signature=fakesignature
     headers: 
       content-type: 
       - application/x-www-form-urlencoded
@@ -45,13 +76,13 @@
       server: 
       - AmazonEC2
       date: 
-      - Mon, 14 Feb 2011 05:06:51 GMT
+      - Mon, 14 Feb 2011 05:45:36 GMT
       transfer-encoding: 
       - chunked
     body: |-
       <?xml version="1.0" encoding="UTF-8"?>
       <DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2010-08-31/">
-          <requestId>24c2d8de-68d8-446b-bf47-dbada676c3e2</requestId>
+          <requestId>254ee6a5-083d-4e0e-8e0e-e78f3fb64c16</requestId>
           <imagesSet>
               <item>
                   <imageId>ami-0686766f</imageId>
@@ -78,38 +109,8 @@
                   <virtualizationType>paravirtual</virtualizationType>
                   <tagSet>
                       <item>
-                          <key>slot</key>
-                          <value>logplex</value>
-                      </item>
-                  </tagSet>
-              </item>
-              <item>
-                  <imageId>ami-2e06f647</imageId>
-                  <imageLocation>646412345678/logplex-12350a613f9a51cd1bc1d0a6d49a7e66a078ec64</imageLocation>
-                  <imageState>available</imageState>
-                  <imageOwnerId>646412345678</imageOwnerId>
-                  <isPublic>false</isPublic>
-                  <architecture>x86_64</architecture>
-                  <imageType>machine</imageType>
-                  <kernelId>aki-0b4aa462</kernelId>
-                  <name>logplex-12350a613f9a51cd1bc1d0a6d49a7e66a078ec64</name>
-                  <rootDeviceType>ebs</rootDeviceType>
-                  <rootDeviceName>/dev/sda1</rootDeviceName>
-                  <blockDeviceMapping>
-                      <item>
-                          <deviceName>/dev/sda1</deviceName>
-                          <ebs>
-                              <snapshotId>snap-7b291316</snapshotId>
-                              <volumeSize>15</volumeSize>
-                              <deleteOnTermination>true</deleteOnTermination>
-                          </ebs>
-                      </item>
-                  </blockDeviceMapping>
-                  <virtualizationType>paravirtual</virtualizationType>
-                  <tagSet>
-                      <item>
-                          <key>slot</key>
-                          <value>logplex</value>
+                          <key>family</key>
+                          <value>zergling</value>
                       </item>
                   </tagSet>
               </item>
