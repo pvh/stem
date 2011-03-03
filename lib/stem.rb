@@ -1,6 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'swirl'
+require 'swirl/aws'
 require 'json'
 
 require 'stem/cli'
