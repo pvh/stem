@@ -1,7 +1,7 @@
 module Stem
   module Util
     def swirl
-      @swirl ||= Swirl::EC2.new load_config
+      @swirl ||= Swirl::AWS.new :ec2, load_config
     end
 
     def tagset_to_hash(tagset)
