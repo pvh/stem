@@ -54,7 +54,7 @@ module Stem
       wait_for_stopped instance_id, log
 
       timestamp = Time.now.utc.iso8601
-      image_id = Stem::Image.create("#{family}-#{timestamp}",
+      image_id = Stem::Image.create("#{family}-#{timestamp.gsub(':', '_')}",
                                     instance_id,
                                     {
                                       :created => timestamp,
@@ -66,8 +66,9 @@ module Stem
 
       wait_for_available(image_id, log)
 
-      log "Terminating #{instance_id} now that the image is captured"
+      log.call "Terminating #{instance_id} now that the image is captured"
       Stem::Instance::destroy(instance_id)
+      image_id
     end
 
     def image_already_built?(family, config, userdata)
