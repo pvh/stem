@@ -3,8 +3,8 @@ $spec = Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 
   s.name = 'stem'
-  s.version = '0.5.4'
-  s.date = '2011-03-03'
+  s.version = '0.5.5'
+  s.date = '2011-03-06'
 
   s.description = "minimalist EC2 instance management"
   s.summary     = "an EC2 instance management library designed to get out of your way and give you instances"
