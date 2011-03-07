@@ -45,7 +45,7 @@ module Stem
       opts
     end
 
-    private
+    protected
 
     def load_config
       account = "default"

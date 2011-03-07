@@ -22,12 +22,14 @@ module Stem
       tagset_to_hash(desc["tagSet"])["family"] == family
     end
 
-    def members family
-      Stem::Image.tagged("family" => family)
+    def members family, architecture = nil
+      opts = architecture ? { "architecture" => architecture } : {}
+      Stem::Image.tagged(opts.merge("family" => family))
     end
 
-    def describe_members family
-      Stem::Image.describe_tagged("family" => family)
+    def describe_members family, architecture = nil
+      opts = architecture ? { "architecture" => architecture } : {}
+      Stem::Image.describe_tagged(opts.merge("family" => family))
     end
 
     def release family, release_name, *amis

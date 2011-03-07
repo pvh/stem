@@ -1,9 +1,17 @@
 require 'spec_helper'
 
+class UtilTestClass
+  include Stem::Util
+end
+
 describe Stem::Util do
   include Stem::Util
 
+  subject { UtilTestClass.new }
+
   describe "tagset_to_hash" do
+    it { should respond_to(:tagset_to_hash) }
+
     it "returns a hash when fed a stupid tagset" do
       tagset = [
         {"value"=>"postgres9-server", "key"=>"type"},
@@ -23,7 +31,9 @@ describe Stem::Util do
     end
   end
 
-  describe "filter_opts" do
+  describe "get_filter_opts" do
+    it { should respond_to(:get_filter_opts) }
+
     it "translates a hash into amazon FilterOpts" do
       tags = {"tag:version" => "production",
               "tag:family" => "postgres9-server"}
@@ -47,6 +57,8 @@ describe Stem::Util do
   end
 
   describe "tags_to_filter" do
+    it { should respond_to(:tags_to_filter) }
+
     it "translates tags into the aws style" do
       tags = {:version => "production",
                :family => "postgres9-server"}
@@ -60,6 +72,8 @@ describe Stem::Util do
   end
 
   describe "aggregate_hash_options_for_ami!" do
+    it { should respond_to(:aggregate_hash_options_for_ami!) }
+
     it "shouldn't alter the hash if 'ami' is in the config hash" do
       config = {'ami' => 'ami-STOUT1'}
       aggregate_hash_options_for_ami!(config).should == config

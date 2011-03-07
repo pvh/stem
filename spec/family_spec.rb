@@ -94,6 +94,15 @@ describe Stem::Family do
       Stem::Image.should_receive(:tagged).and_return(amis)
       Stem::Family.members("postgres").should == amis
     end
+
+    it "should accept an architecture argument" do
+      f, arch = "postgres", "x86_64"
+      Stem::Image.should_receive(:tagged).with({
+        "family" => f,
+        "architecture" => arch
+      })
+      Stem::Family.members(f, "x86_64")
+    end
   end
 
   describe "describe_members" do
@@ -105,6 +114,15 @@ describe Stem::Family do
       f = "postgres"
       Stem::Image.should_receive(:describe_tagged).with("family" => f)
       Stem::Family.describe_members(f)
+    end
+
+    it "should accept an architecture argument" do
+      f, arch = "postgres", "x86_64"
+      Stem::Image.should_receive(:describe_tagged).with({
+        "family" => f,
+        "architecture" => arch
+      })
+      Stem::Family.describe_members(f, "x86_64")
     end
   end
 
