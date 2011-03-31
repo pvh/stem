@@ -64,7 +64,7 @@ module Stem
     end
 
     def stop instance_id, force = false
-      swirl.call "StopInstances", "InstanceId" => instance_id, "Force" => force
+      swirl.call "StopInstances", "InstanceId" => instance_id, "Force" => force.to_s
     end
 
     def start instance_id
