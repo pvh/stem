@@ -23,6 +23,7 @@ $spec = Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-core', '~> 2.5.0'
   s.add_development_dependency 'rspec-expectations', '~> 2.5.0'
   s.add_development_dependency 'rspec-mocks', '~> 2.5.0'
+  s.add_development_dependency 'timecop', '~> 0.3.5'
   s.add_development_dependency 'vcr', '~> 1.6.0'
   s.add_development_dependency 'webmock', '~> 1.6.2'
   s.homepage = "http://github.com/pvh/stem"
