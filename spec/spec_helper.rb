@@ -1,6 +1,6 @@
 require 'vcr'
 require 'timecop'
-require 'lib/stem'
+require File.join(File.dirname(__FILE__), '../lib/stem')
 
 RSpec.configure do |c|
   c.extend VCR::RSpec::Macros
@@ -29,7 +29,15 @@ if ENV["VCR_RECORD"]
 else
   puts "******** VCR PLAYBACK **********"
 
-  Timecop.freeze(Time.parse("2002-10-28T04:16:00Z"))
+  RSpec.configure do |config|
+    config.before(:each) do
+      Timecop.freeze(Time.parse("2002-10-28T04:16:00Z"))
+    end
+
+    config.after(:each) do
+      Timecop.return
+    end
+  end
 
   VCR.config do |c|
     c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'

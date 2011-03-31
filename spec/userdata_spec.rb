@@ -1,5 +1,4 @@
 require 'rspec'
-require 'lib/stem'
 
 describe Stem::Userdata do
   describe '#compile' do
